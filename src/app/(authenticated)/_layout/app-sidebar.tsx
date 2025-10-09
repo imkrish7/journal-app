@@ -1,8 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { ArchiveX, File, Inbox, Send, Trash2 } from "lucide-react"
-
 import { NavUser } from "./nav-user"
 import {
   Sidebar,
@@ -17,6 +15,12 @@ import {
   
 } from "@/components/ui/sidebar"
 import { logoFont } from "@/app/layout"
+import MemoryLottie from "@/components/icons/MemoryLottie"
+import TodoLottie from "@/components/icons/TodoLottie"
+import ReminderLottie from "@/components/icons/ReminderLottie"
+import TrashLottie from "@/components/icons/TrashLottie"
+
+import Link from "next/link"
 
 
 // This is sample data
@@ -28,44 +32,35 @@ const data = {
   },
   navMain: [
     {
-      title: "Inbox",
-      url: "#",
-      icon: Inbox,
+      title: "Todoist",
+      url: "/todo",
+      icon: TodoLottie,
       isActive: true,
     },
     {
-      title: "Drafts",
-      url: "#",
-      icon: File,
+      title: "Memory",
+      url: "/memory",
+      icon: MemoryLottie,
       isActive: false,
     },
     {
-      title: "Sent",
-      url: "#",
-      icon: Send,
-      isActive: false,
-    },
-    {
-      title: "Junk",
-      url: "#",
-      icon: ArchiveX,
+      title: "Reminders",
+      url: "/reminders",
+      icon: ReminderLottie,
       isActive: false,
     },
     {
       title: "Trash",
-      url: "#",
-      icon: Trash2,
+      url: "/trash",
+      icon: TrashLottie,
       isActive: false,
     },
+    
   ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  // Note: I'm using state to show active item.
-  // IRL you should use the url/router.
-//   const [activeItem, setActiveItem] = React.useState(data.navMain[0])
- 
-//   const { setOpen } = useSidebar()
+  
 
   return (
       <Sidebar
@@ -79,21 +74,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton size="lg" asChild className="md:h-8 md:p-0">
-                <a href="#">
+                <Link href="#">
                   <div className="text-sidebar-secondary flex aspect-square size-10 items-center justify-center rounded-lg">
-                    {/* <Command className="size-4" />
-                     */}
                     <span className={`font-bold text-3xl ${logoFont.className}`}>j</span>
                   </div>
-                  
-                </a>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarHeader>
         <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupContent className="px-1.5 md:px-0">
+          <SidebarGroup className="p-1">
+            <SidebarGroupContent>
               <SidebarMenu>
                 {data.navMain.map((item) => (
                   <SidebarMenuItem key={item.title}>
@@ -102,12 +94,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         children: item.title,
                         hidden: false,
                       }}
-                      onClick={()=>{}}
-                    //   isActive={activeItem?.title === item.title}
-                      className="px-2.5 md:px-2"
+                      className="size-12 hover:bg-gray-200 mt-1"
                     >
-                      <item.icon />
-                      <span>{item.title}</span>
+                      <Link className="h-full w-full" href={item.url}>
+                        <item.icon/>
+                      </Link>
+                      
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
