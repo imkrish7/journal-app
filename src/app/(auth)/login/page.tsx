@@ -32,9 +32,9 @@ const Page = () => {
 		console.log(data);
 	};
 	return (
-		<div className="w-full min-h-inherit flex items-center justify-center">
-			<Card className="w-5xl p-0 border-0 shadown-0">
-				<CardContent className="grid grid-cols-2 h-[550px] p-0">
+		<div className="w-full relative flex min-h-inherit items-center justify-center">
+			<Card className="w-4xl p-0 absolute border-0 shadown-0">
+				<CardContent className="grid grid-cols-2 h-[450px] p-0">
 					<div className="w-full background rounded-l-md h-full flex flex-col items-center justify-center">
 						<div className="text-4xl my-2">
 							<span className="text-gray-100 font-semibold">Welcome back</span>
@@ -92,7 +92,7 @@ const Page = () => {
 						</Form>
 						<div className="flex">
 							<span className="text-gray-100 font-semibold gap-1 flex">
-								Don't have account?
+								Don&apos;t have account?
 								<Link className="underline text-blue-500" href={"/signup"}>
 									Signup
 								</Link>
@@ -114,6 +114,7 @@ const Page = () => {
 			<div className="background w-full sm:w-40 h-40 rounded-full absolute animate-bounce top-1 opacity-20 max-sm:right-0 sm:left-16 z-0"></div>
 			<div className="background rounded-md w-full sm:w-40 h-24 rotate-45 absolute top-30 -left-0 opacity-20 z-0"></div>
 			<div className="background rounded-tl-[100px] rounded-br-[100px] rounded-md w-full sm:w-40 h-40 absolute bottom-0 left-0 opacity-20 z-0"></div>
+			<div className="bg-red-300 animate-wiggle rounded-bl-[100px] w-full sm:w-40 h-40 absolute top-0 right-0 opacity-20 z-0"></div>
 
 			<div className="background -rotate-45 rounded-t-[100px] rounded-b-[100px] w-full sm:w-30 h-40 absolute bottom-10 right-10 opacity-20 z-0"></div>
 
