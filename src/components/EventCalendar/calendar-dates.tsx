@@ -94,7 +94,9 @@ const CalenderDates = () => {
 							>
 								<span
 									className={`text-xs ${
-										today(date) ? "bg-indigo-300 rounded-full w-16 h-16" : ""
+										today(date)
+											? "bg-indigo-500 rounded-full w-7 h-7 flex items-center justify-center text-gray-200"
+											: ""
 									} font-semibold text-gray-400`}
 								>
 									{new Date(date).getDate()}

@@ -7,11 +7,11 @@ import {
 	SidebarContent,
 	SidebarFooter,
 	SidebarGroup,
-	SidebarGroupContent,
 	SidebarHeader,
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	useSidebar,
 } from "@/components/ui/sidebar";
 import { logoFont } from "@/app/layout";
 import MemoryLottie from "@/components/icons/MemoryLottie";
@@ -20,6 +20,9 @@ import ReminderLottie from "@/components/icons/ReminderLottie";
 import TrashLottie from "@/components/icons/TrashLottie";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useIsMobile } from "@/hooks/use-mobile";
+import HomeLottie from "@/components/icons/HomeLottie";
 
 // This is sample data
 const data = {
@@ -29,6 +32,12 @@ const data = {
 		avatar: "/avatars/shadcn.jpg",
 	},
 	navMain: [
+		{
+			title: "Dashboard",
+			url: "/dashboard",
+			icon: HomeLottie,
+			isActive: true,
+		},
 		{
 			title: "Todoist",
 			url: "/todo",
@@ -57,13 +66,13 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+	// const [activeItem, setActiveItem] = useState(data.navMain[0]);
+	const router = useRouter();
+	const { state } = useSidebar();
+	const isMobile = useIsMobile();
+	console.log(state);
 	return (
-		<Sidebar
-			collapsible="icon"
-			variant="sidebar"
-			className="w-[calc(var(--sidebar-width-icon)+1px)]! border-r"
-			{...props}
-		>
+		<Sidebar collapsible="icon" {...props}>
 			<SidebarHeader>
 				<SidebarMenu>
 					<SidebarMenuItem>
@@ -80,26 +89,29 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				</SidebarMenu>
 			</SidebarHeader>
 			<SidebarContent>
-				<SidebarGroup className="p-1">
-					<SidebarGroupContent>
-						<SidebarMenu>
-							{data.navMain.map((item) => (
-								<SidebarMenuItem key={item.title}>
-									<SidebarMenuButton
-										tooltip={{
-											children: item.title,
-											hidden: false,
-										}}
-										className="size-12 hover:bg-gray-200 mt-1"
-									>
-										<Link className="h-full w-full" href={item.url}>
-											<item.icon />
-										</Link>
-									</SidebarMenuButton>
-								</SidebarMenuItem>
-							))}
-						</SidebarMenu>
-					</SidebarGroupContent>
+				<SidebarGroup>
+					<SidebarMenu>
+						{data.navMain.map((item) => (
+							<SidebarMenuItem key={item.title}>
+								<SidebarMenuButton
+									onClick={() => {
+										router.push(item.url);
+									}}
+									tooltip={item.title}
+									className={`${
+										state === "collapsed" ? "size-12" : "p-1"
+									} mt-2`}
+								>
+									<div className={`w-5 h-5`}>
+										<item.icon />
+									</div>
+									{(state === "expanded" || isMobile) && (
+										<span>{item.title}</span>
+									)}
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+						))}
+					</SidebarMenu>
 				</SidebarGroup>
 			</SidebarContent>
 			<SidebarFooter>
