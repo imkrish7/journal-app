@@ -142,3 +142,28 @@
 	-webkit-text-fill-color: transparent;
 	display: inline-block;
 }
+
+.gradient {
+	color: hsla(154, 100%, 76%, 1);
+
+	color: linear-gradient(
+		90deg,
+		hsla(154, 100%, 76%, 1) 0%,
+		hsla(234, 100%, 83%, 1) 50%,
+		hsla(288, 100%, 81%, 1) 100%
+	);
+
+	color: -moz-linear-gradient(
+		90deg,
+		hsla(154, 100%, 76%, 1) 0%,
+		hsla(234, 100%, 83%, 1) 50%,
+		hsla(288, 100%, 81%, 1) 100%
+	);
+
+	color: -webkit-linear-gradient(
+		90deg,
+		hsla(154, 100%, 76%, 1) 0%,
+		hsla(234, 100%, 83%, 1) 50%,
+		hsla(288, 100%, 81%, 1) 100%
+	);
+}

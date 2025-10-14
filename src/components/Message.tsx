@@ -30,12 +30,12 @@ const Message: FC<IProps> = ({ who, userAvatarLink, message }) => {
 					</Avatar>
 				)}
 			</div>
-			<div className={`w-[50%]`}>
+			<div className={`w-[50%] rounded-md`}>
 				<div
-					className={`px-2 py-1 bg-violet-100 shadow-md shadow-violet-100 backdrop-blur-xs rounded-md inline-flex`}
+					className={`px-2 py-1 rounded-md bg-white/[0.7] backdrop-blur-3xl inline-flex`}
 				>
-					<div className="flex flex-col">
-						<span className={`text-sm font-normal text-violet-500 inline-flex`}>
+					<div className="flex flex-col bg-transparent">
+						<span className={`text-sm font-normal text-gray-600 inline-flex`}>
 							{message}
 						</span>
 						<div

@@ -1,12 +1,8 @@
-import React from 'react'
-import { DotLottieReact } from '@lottiefiles/dotlottie-react'
+import React from "react";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 const TrashLottie = () => {
-    return <DotLottieReact
-        src="/lottiefiles/trash.lottie"
-        loop
-        autoplay
-    />
-}
+	return <DotLottieReact src="/lottiefiles/trash.lottie" autoplay />;
+};
 
-export default TrashLottie
+export default TrashLottie;

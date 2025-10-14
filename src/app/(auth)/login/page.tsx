@@ -33,23 +33,26 @@ const Page = () => {
 	};
 	return (
 		<div className="w-full relative flex min-h-inherit items-center justify-center">
-			<Card className="w-4xl p-0 absolute border-0 shadown-0">
-				<CardContent className="grid grid-cols-2 h-[450px] p-0">
+			<Card className="w-[350px] background md:w-4xl py-2 sm:p-0 border-0 shadow-none flex justify-center gap-0">
+				<CardContent className="w-full grid grid-cols-1 sm:grid-cols-2 sm:h-[450px] p-0 items-center">
 					<div className="w-full background rounded-l-md h-full flex flex-col items-center justify-center">
 						<div className="text-4xl my-2">
 							<span className="text-gray-100 font-semibold">Welcome back</span>
 						</div>
 						<Form {...form}>
-							<form onSubmit={form.handleSubmit(handleLogin)}>
-								<div className="flex relative mt-4 flex-col gap-4">
+							<form
+								className="w-full px-4 flex justify-center mt-4"
+								onSubmit={form.handleSubmit(handleLogin)}
+							>
+								<div className="flex w-full relative flex-col gap-4">
 									<FormField
 										control={form.control}
 										name="email"
 										render={() => (
-											<FormItem>
+											<FormItem className="w-full">
 												<FormLabel className="text-gray-100">Email</FormLabel>
 												<FormControl>
-													<div className="flex w-sm">
+													<div className="flex w-full sm:w-sm">
 														<Input placeholder="Email..." />
 													</div>
 												</FormControl>
@@ -62,12 +65,12 @@ const Page = () => {
 										control={form.control}
 										name="password"
 										render={() => (
-											<FormItem>
+											<FormItem className="w-full">
 												<FormLabel className="text-gray-100">
 													Password
 												</FormLabel>
 												<FormControl>
-													<div className="flex w-sm">
+													<div className="flex w-full sm:w-sm">
 														<Input placeholder="********************" />
 													</div>
 												</FormControl>
@@ -76,7 +79,7 @@ const Page = () => {
 											</FormItem>
 										)}
 									/>
-									<div className="flex w-sm">
+									<div className="flex w-full sm:w-sm">
 										<Button className="bg-gray-100 text-gray-400">Login</Button>
 									</div>
 									<span className="absolute bottom-8 right-0">
@@ -99,26 +102,22 @@ const Page = () => {
 							</span>
 						</div>
 					</div>
-					<div className=" relative background rounded-r-md">
-						<div className="bg-gray-100 w-full sm:w-40 h-40 rounded-full absolute top-1 opacity-20 max-sm:right-0 sm:left-56 z-0"></div>
-						<div className="bg-gray-100 rounded-md w-full sm:w-40 h-24 absolute top-0 -left-0 opacity-20 z-0"></div>
-						<div className="bg-gray-100 rounded-t-[100px] w-full sm:w-30 h-40 absolute top-40 -left-0 opacity-20 z-0"></div>
-						<div className="w-full relative backdrop-blur-3xl"></div>
-						<div className="bg-gray-100 w-full sm:w-40 h-40 rounded-full absolute bottom-40 opacity-20 right-0  z-0"></div>
-						<div className="bg-gray-100 rounded-md w-full sm:w-50 h-20 absolute bottom-0 right-40 opacity-20 z-0"></div>
-						<div className="bg-gray-100 rounded-t-[100px] w-full sm:w-30 h-40 absolute bottom-0 right-0 opacity-20 z-0"></div>
+					<div className="hidden md:block relative background rounded-r-md">
+						<div className="bg-gray-100 sm:w-20 sm:h-20 lg:w-30 lg:h-30 rounded-full absolute top-0 opacity-20 md:left-56 z-0"></div>
+						<div className="bg-gray-100 rounded-md sm:h-10 w-20 lg:w-30 lg:h-24 absolute top-0 -left-0 opacity-20 z-0"></div>
+						<div className="bg-gray-100 rounded-t-[100px] sm:h-10 sm:w-10 lg:w-20 lg:h-30 absolute top-40 -left-0 opacity-20 z-0"></div>
+						<div className="bg-gray-100 sm:w-20 sm:h-20 lg:w-30 lg:h-30 rounded-full absolute bottom-40 opacity-20 right-0  z-0"></div>
+						<div className="bg-gray-100 rounded-md sm:h-10 lg:w-20 lg:w-50 lg:h-20 absolute bottom-0 right-40 opacity-20 z-0"></div>
+						<div className="bg-gray-100 rounded-t-[100px] sm:w-10 sm:h-15 lg:w-20 lg:h-30 absolute bottom-0 right-0 opacity-20 z-0"></div>
 						<RobotLottie />
 					</div>
 				</CardContent>
 			</Card>
-			<div className="background w-full sm:w-40 h-40 rounded-full absolute animate-bounce top-1 opacity-20 max-sm:right-0 sm:left-16 z-0"></div>
-			<div className="background rounded-md w-full sm:w-40 h-24 rotate-45 absolute top-30 -left-0 opacity-20 z-0"></div>
-			<div className="background rounded-tl-[100px] rounded-br-[100px] rounded-md w-full sm:w-40 h-40 absolute bottom-0 left-0 opacity-20 z-0"></div>
-			<div className="bg-red-300 animate-wiggle rounded-bl-[100px] w-full sm:w-40 h-40 absolute top-0 right-0 opacity-20 z-0"></div>
-
-			<div className="background -rotate-45 rounded-t-[100px] rounded-b-[100px] w-full sm:w-30 h-40 absolute bottom-10 right-10 opacity-20 z-0"></div>
-
-			<div className="background animate-pulse w-full sm:w-40 h-40 rounded-full absolute bottom-40 opacity-20 right-0  z-0"></div>
+			<div className="bg-violet-300 backdrop-blur-xs w-20 h-20 left-10 md:w-30 md:h-30 lg:w-40 lg:h-40 rounded-full absolute opacity-40 top-1 z-0"></div>
+			<div className="bg-amber-300 backdrop-blur-xs rounded-md w-28 h-16 md:w-30 md:h-24 lg:w-40 lg:h-24 rotate-45 absolute bottom-10 -left-0 z-0 opacity-20 "></div>
+			<div className="bg-red-300 backdrop-blur-xs rounded-bl-[100px] w-30 h-30 md:h-30 md:w-30 lg:w-40 lg:h-40 absolute top-0  opacity-20 right-0 z-0"></div>
+			<div className="bg-orange-300 backdrop-blur-xs -rotate-45 rounded-t-[100px] w-20 h-40 md:w-20 md:h-30 lg:w-30 lg:h-40  absolute bottom-10 right-20 opacity-20 z-0"></div>
+			<div className="bg-fuchsia-300 backdrop-blur-xs w-20 h-20 md:w-30 md:h-30 lg:w-40 lg:h-40 rounded-full absolute bottom-40 right-0 opacity-20  z-0"></div>
 		</div>
 	);
 };

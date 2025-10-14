@@ -8,7 +8,7 @@ const message =
 
 const page = () => {
 	return (
-		<div className="flex flex-col p-4">
+		<div className="flex flex-col p-4 relative flex-1">
 			<div className="flex-1 gap-2 flex flex-col">
 				<Message who="USER" message="Hello" userAvatarLink="" />
 				<Message who="AI" message={message} userAvatarLink="" />

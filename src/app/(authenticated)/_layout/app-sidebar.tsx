@@ -37,30 +37,40 @@ const data = {
 			url: "/dashboard",
 			icon: HomeLottie,
 			isActive: true,
+			background: "#8238e830",
+			textColor: "#8238e8",
 		},
 		{
 			title: "Todoist",
 			url: "/todo",
 			icon: TodoLottie,
 			isActive: true,
+			background: "#56425230",
+			textColor: "#565252",
 		},
 		{
 			title: "Memory",
 			url: "/memory",
 			icon: MemoryLottie,
 			isActive: false,
+			background: "#5569cc30",
+			textColor: "#5569cc",
 		},
 		{
 			title: "Reminders",
 			url: "/reminders",
 			icon: ReminderLottie,
 			isActive: false,
+			background: "#fa333330",
+			textColor: "#fa3333",
 		},
 		{
 			title: "Trash",
 			url: "/trash",
 			icon: TrashLottie,
 			isActive: false,
+			background: "#fa333330",
+			textColor: "#fa3333",
 		},
 	],
 };
@@ -70,17 +80,27 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const router = useRouter();
 	const { state } = useSidebar();
 	const isMobile = useIsMobile();
-	console.log(state);
+
 	return (
-		<Sidebar collapsible="icon" {...props}>
+		<Sidebar
+			collapsible="icon"
+			{...props}
+			className="border-none has-data[variant=
+			'floating']:bg-white/60"
+			variant="floating"
+		>
 			<SidebarHeader>
 				<SidebarMenu>
 					<SidebarMenuItem>
-						<SidebarMenuButton size="lg" asChild className="md:h-8 md:p-0">
+						<SidebarMenuButton size="lg" asChild className="md:h-10 md:p-0">
 							<Link href="/dashboard">
-								<div className="text-sidebar-secondary flex aspect-square size-10 items-center justify-center rounded-lg">
-									<span className={`font-bold text-3xl ${logoFont.className}`}>
-										j
+								<div
+									className={`text-sidebar-secondary flex aspect-square ${
+										state === "collapsed" ? "size-10" : "p-2"
+									} items-center justify-center rounded-lg`}
+								>
+									<span className={`font-bold text-2xl ${logoFont.className}`}>
+										j{state === "expanded" && <span>ournal</span>}
 									</span>
 								</div>
 							</Link>
@@ -98,15 +118,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 										router.push(item.url);
 									}}
 									tooltip={item.title}
-									className={`${
-										state === "collapsed" ? "size-12" : "p-1"
-									} mt-2`}
+									style={{
+										backgroundColor: item.background,
+									}}
+									className={`group-data-[collapsible=icon]:p-0! mt-2`}
 								>
-									<div className={`w-5 h-5`}>
+									<div className={`w-8 h-8`}>
 										<item.icon />
 									</div>
 									{(state === "expanded" || isMobile) && (
-										<span>{item.title}</span>
+										<span
+											style={{
+												color: item.textColor,
+											}}
+											className={`font-bold`}
+										>
+											{item.title}
+										</span>
 									)}
 								</SidebarMenuButton>
 							</SidebarMenuItem>
