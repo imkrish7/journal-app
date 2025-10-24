@@ -1,32 +1,28 @@
 // import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import AuthProvider from "@/providers/AuthProvider";
 
 // export const metadata: Metadata = {
 //   title: "journal",
 //   description: "A bot like campanion",
 // };
 
-
 export const logoFont = localFont({
-  src: "../../public/fonts/MarckScript-Regular.ttf",
-  display: "optional"
-})
-
-
+	src: "../../public/fonts/MarckScript-Regular.ttf",
+	display: "optional",
+});
 
 export default function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body
-        className={`antialiased`}
-      >
-        {children}
-      </body>
-    </html>
-  );
+	return (
+		<html lang="en">
+			<body className={`antialiased`}>
+				<AuthProvider>{children}</AuthProvider>
+			</body>
+		</html>
+	);
 }

@@ -1,3 +1,4 @@
+import { loginAction } from "@/actions/authActions";
 import {
 	ILoginResponse,
 	ILoginRequest,
@@ -9,7 +10,7 @@ import {
 import { toast } from "sonner";
 import { assign, fromPromise, setup } from "xstate";
 
-export const auth = setup({
+export const authMachine = setup({
 	types: {
 		context: {} as {
 			loginRequest: ILoginRequest | null;
@@ -50,11 +51,38 @@ export const auth = setup({
 	},
 	actors: {
 		login: fromPromise(async ({ input }: { input: ILoginRequest }) => {
-			console.log(input);
+			const response = await loginAction(input);
+			return response;
+		}),
+		authenticateToken: fromPromise(async () => {
 			return {
 				authToken: "",
 			};
 		}),
+		signup: fromPromise(async ({ input }: { input: ISignupRequest }) => {
+			console.log(input);
+			return {};
+		}),
+		sendVerifyEmail: fromPromise(async ({ input }: { input: string }) => {
+			console.log(input);
+			return {};
+		}),
+		verifyUser: fromPromise(async ({ input }: { input: IVerifyRequest }) => {
+			console.log(input);
+			return {};
+		}),
+		sendUserForgotPasswordLink: fromPromise(
+			async ({ input }: { input: string }) => {
+				console.log(input);
+				return {};
+			}
+		),
+		getUserPasswordReset: fromPromise(
+			async ({ input }: { input: IResetPassword }) => {
+				console.log(input);
+				return {};
+			}
+		),
 	},
 	guards: {
 		hasAuthToken: () => {
@@ -86,14 +114,14 @@ export const auth = setup({
 					always: [
 						{
 							guard: "hasAuthToken",
-							target: "authenticate",
+							target: "validateAuthToken",
 						},
 						{
 							target: "tryAuthenticate",
 						},
 					],
 				},
-				tryAcuthenticate: {
+				tryAuthenticate: {
 					on: {
 						"login.submit": {
 							target: "getUserLoggedin",
@@ -112,7 +140,7 @@ export const auth = setup({
 							}),
 						},
 						"verify.sendLink": {
-							target: "getUserVerifyLink",
+							target: "getUserVerifyEmail",
 							actions: assign(({ event }) => {
 								return {
 									email: event.email,
@@ -156,10 +184,12 @@ export const auth = setup({
 							return context.loginRequest;
 						},
 						onDone: {
-							target: "validateAuthToken",
+							target: "#authentication.authenticated",
 							actions: assign(({ event }) => {
+								localStorage.setItem("JOURNAL_AUTH", event.output.authToken);
 								return {
 									loginResponse: event.output,
+									authenticated: true,
 								};
 							}),
 						},
@@ -171,11 +201,151 @@ export const auth = setup({
 						},
 					},
 				},
-				getUserSignup: {},
-				getUserVerifyLink: {},
-				getUserVerified: {},
-				getUserForgotPasswordLink: {},
-				getUserPasswordReset: {},
+				validateAuthToken: {
+					invoke: {
+						src: "authenticateToken",
+						input: () => {
+							const token = localStorage.getItem("JOURNAL_AUTH");
+							if (!token) {
+								toast.error("Invalid request!");
+							}
+						},
+						onDone: {
+							target: "#authentication.authenticated",
+							actions: ({ event }) => {
+								localStorage.setItem("JOURNAL_AUTH", event.output.authToken);
+							},
+						},
+						onError: {
+							target: "gotoLogin",
+							actions: () => {
+								toast.error("Unauthorized!");
+							},
+						},
+					},
+				},
+				getUserSignup: {
+					invoke: {
+						src: "signup",
+						input: ({ context }) => {
+							if (!context.signupRequest) {
+								throw new Error("Unauthorized");
+							}
+							return context.signupRequest;
+						},
+						onDone: {
+							target: "gotoVerify",
+							actions: () => {
+								toast.success("Signup Completed!");
+							},
+						},
+						onError: {
+							target: "tryAuthenticate",
+							actions: () => {
+								toast.error("Signup failed");
+							},
+						},
+					},
+				},
+				getUserVerifyEmail: {
+					invoke: {
+						src: "sendVerifyEmail",
+						input: ({ context }) => {
+							if (!context.email) {
+								throw new Error("Bad request");
+							}
+							return context.email;
+						},
+						onDone: {
+							target: "gotoVerify",
+							actions: () => {
+								toast.success(
+									"Verification otp sent to your registered email!"
+								);
+							},
+						},
+						onError: {
+							target: "tryAuthenticate",
+							actions: () => {
+								toast.error("Failed to send verification email");
+							},
+						},
+					},
+				},
+				getUserVerified: {
+					invoke: {
+						src: "verifyUser",
+						input: ({ context }) => {
+							if (!context.verifyRequest) {
+								throw new Error("Bad request!");
+							}
+							return context.verifyRequest;
+						},
+						onDone: {
+							target: "gotoLogin",
+							actions: () => {
+								toast.success("Your account is now verified now!");
+							},
+						},
+						onError: {
+							target: "gotoVerify",
+							actions: () => {
+								toast.error("Account verification failed!");
+							},
+						},
+					},
+				},
+				getUserForgotPasswordLink: {
+					invoke: {
+						src: "sendUserForgotPasswordLink",
+						input: ({ context }) => {
+							if (!context.email) {
+								throw new Error("Bad request!");
+							}
+							return context.email;
+						},
+						onDone: {
+							target: "gotoForgotPasswordLink",
+							actions: () => {
+								toast.success("Reset password link has been sent!");
+							},
+						},
+						onError: {
+							target: "gotoForgotPasswordLink",
+							actions: () => {
+								toast.error("Failed to send forgot password link");
+							},
+						},
+					},
+				},
+				getUserPasswordReset: {
+					invoke: {
+						src: "getUserPasswordReset",
+						input: ({ context }) => {
+							if (!context.resetPassword) {
+								throw new Error("Bad request!");
+							}
+
+							return context.resetPassword;
+						},
+						onDone: {
+							target: "gotoLogin",
+							actions: () => {
+								toast.success("Your password has been reset");
+							},
+						},
+						onError: {
+							target: "gotoResetPassword",
+							actions: () => {
+								toast.error("Failed to reset password!");
+							},
+						},
+					},
+				},
+				gotoLogin: {},
+				gotoVerify: {},
+				gotoResetPassword: {},
+				gotoForgotPasswordLink: {},
 			},
 		},
 		authenticated: {},
