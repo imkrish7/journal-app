@@ -7,6 +7,7 @@ import {
 	IVerifyRequest,
 	IResetPassword,
 } from "@/interface/auth";
+import { AxiosError } from "axios";
 import { toast } from "sonner";
 import { assign, fromPromise, setup } from "xstate";
 
@@ -186,7 +187,7 @@ export const authMachine = setup({
 						onDone: {
 							target: "#authentication.authenticated",
 							actions: assign(({ event }) => {
-								localStorage.setItem("JOURNAL_AUTH", event.output.authToken);
+								localStorage.setItem("JOURNAL_AUTH", event.output.access_token);
 								return {
 									loginResponse: event.output,
 									authenticated: true,
@@ -195,8 +196,12 @@ export const authMachine = setup({
 						},
 						onError: {
 							target: "tryAuthenticate",
-							actions: () => {
-								toast.error("Error in login");
+							actions: ({ event }) => {
+								if (event.error instanceof AxiosError) {
+									toast.error(event.error.response?.data.message);
+								} else {
+									toast.error("Error in login");
+								}
 							},
 						},
 					},

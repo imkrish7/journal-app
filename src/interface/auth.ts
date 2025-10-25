@@ -1,10 +1,10 @@
 export interface ILoginRequest {
-	email: string;
+	username: string;
 	password: string;
 }
 
 export interface ILoginResponse {
-	authToken: string;
+	access_token: string;
 }
 
 export interface ISignupRequest {
@@ -24,4 +24,9 @@ export interface IVerifyRequest {
 
 export interface IResetPassword {
 	newPassword: string;
+}
+
+export interface ErrorResponse {
+	error: string;
+	message: string;
 }

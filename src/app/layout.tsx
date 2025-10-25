@@ -1,7 +1,7 @@
 // import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import AuthProvider from "@/providers/AuthProvider";
+import { Toaster } from "sonner";
 
 // export const metadata: Metadata = {
 //   title: "journal",
@@ -21,7 +21,8 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={`antialiased`}>
-				<AuthProvider>{children}</AuthProvider>
+				{children}
+				<Toaster />
 			</body>
 		</html>
 	);

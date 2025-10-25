@@ -13,28 +13,46 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import React from "react";
+import React, { startTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/schema/auth";
 import z from "zod";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
+	const router = useRouter();
 	const form = useForm({
 		resolver: zodResolver(loginSchema),
 		defaultValues: {
-			email: "",
+			username: "",
 			password: "",
 		},
 	});
 
 	const handleLogin = (data: z.infer<typeof loginSchema>) => {
-		console.log(data);
+		startTransition(async () => {
+			const response = await fetch("/api/auth/login", {
+				method: "POST",
+				body: JSON.stringify(data),
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+
+			if (!response) {
+				toast.error("Failed to login");
+			} else {
+				toast.success("User is logged in now!");
+				router.replace("/dashboard");
+			}
+		});
 	};
 	return (
 		<div className="w-full relative flex min-h-inherit items-center justify-center">
-			<Card className="w-[350px] background md:w-4xl py-2 sm:p-0 border-0 shadow-none flex justify-center gap-0">
-				<CardContent className="w-full grid grid-cols-1 md:grid-cols-2 md:h-[450px] lg:p-0 items-center ">
+			<Card className="w-[350px] background sm:w-2xl lg:w-4xl py-2 sm:p-0 border-0 shadow-none flex justify-center gap-0">
+				<CardContent className="w-full grid grid-cols-1 p-2 md:grid-cols-2 md:h-[450px] lg:p-0 items-center">
 					<div className="w-full rounded-md sm:rounded-l-md sm:h-full flex flex-col items-center justify-center">
 						<div className="text-4xl my-2">
 							<span className="text-gray-100 font-semibold">Welcome back</span>
@@ -47,13 +65,15 @@ const Page = () => {
 								<div className="flex w-full relative flex-col gap-4">
 									<FormField
 										control={form.control}
-										name="email"
-										render={() => (
+										name="username"
+										render={({ field }) => (
 											<FormItem className="w-full">
-												<FormLabel className="text-gray-100">Email</FormLabel>
+												<FormLabel className="text-gray-100">
+													Username
+												</FormLabel>
 												<FormControl>
 													<div className="flex w-full">
-														<Input placeholder="Email..." />
+														<Input placeholder="Email..." {...field} />
 													</div>
 												</FormControl>
 												<FormDescription />
@@ -64,14 +84,18 @@ const Page = () => {
 									<FormField
 										control={form.control}
 										name="password"
-										render={() => (
+										render={({ field }) => (
 											<FormItem className="w-full">
 												<FormLabel className="text-gray-100">
 													Password
 												</FormLabel>
 												<FormControl>
 													<div className="flex w-full">
-														<Input placeholder="********************" />
+														<Input
+															type="password"
+															placeholder="********************"
+															{...field}
+														/>
 													</div>
 												</FormControl>
 												<FormDescription />

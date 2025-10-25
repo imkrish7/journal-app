@@ -1,20 +1,26 @@
-import { post } from "@/api/method";
-import {
-	ILoginRequest,
-	ILoginResponse,
-	ISignupRequest,
-	ISignupResponse,
-} from "@/interface/auth";
+import { ILoginRequest } from "@/interface/auth";
 
-export const loginAction = async (
-	loginRequeset: ILoginRequest
-): Promise<ILoginResponse> => {
-	const result = await post("/login", loginRequeset);
-	return result as unknown as ILoginResponse;
+export const loginAction = async (loginRequest: ILoginRequest) => {
+	try {
+		const result = await fetch("/api/auth/login", {
+			method: "POST",
+			body: JSON.stringify(loginRequest),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		if (!result.ok) {
+			return false;
+		}
+		return true;
+	} catch (error) {
+		console.dir(error);
+		return false;
+	}
 };
-export const signupAction = async (
-	signupRequeset: ISignupRequest
-): Promise<ISignupResponse> => {
-	const result = await post("/signup", signupRequeset);
-	return result as unknown as ISignupResponse;
-};
+// export const signupAction = async (
+// 	signupRequeset: ISignupRequest
+// ): Promise<ISignupResponse> => {
+// 	const result = await post("/auth/signup", signupRequeset);
+// 	return result as unknown as ISignupResponse;
+// };

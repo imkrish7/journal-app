@@ -30,7 +30,7 @@ const Page = () => {
 	return (
 		<div className="w-full relative min-h-inherit flex items-center justify-center">
 			<Card className="w-[350px] background sm:w-2xl lg:w-4xl py-2 sm:p-0 border-0 shadow-none flex justify-center gap-0">
-				<CardContent className="w-full grid grid-cols-1 md:grid-cols-2 md:h-[450px] lg:p-0 items-center ">
+				<CardContent className="w-full grid grid-cols-1 p-2 md:grid-cols-2 md:h-[450px] lg:p-0 items-center ">
 					<div className="w-full rounded-md sm:rounded-l-md sm:h-full flex flex-col items-center justify-center">
 						<div className="text-4xl my-2">
 							<span className="text-gray-100 font-semibold">Welcome</span>
@@ -115,7 +115,7 @@ const Page = () => {
 							</span>
 						</div>
 					</div>
-					<div className="hidden sm:block relative h-full rounded-r-md">
+					<div className="hidden md:block relative h-full rounded-r-md">
 						<div className="bg-gray-100 sm:w-20 sm:h-20 lg:w-30 lg:h-30 rounded-full absolute top-0 opacity-20 md:left-56 z-0"></div>
 						<div className="bg-gray-100 rounded-md sm:h-10 w-20 lg:w-30 lg:h-24 absolute top-0 -left-0 opacity-20 z-0"></div>
 						<div className="bg-gray-100 rounded-t-[100px] sm:h-10 sm:w-10 lg:w-20 lg:h-30 absolute top-40 -left-0 opacity-20 z-0"></div>
