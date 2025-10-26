@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
 			(await result.json()) as APIResponse<ILoginResponse>;
 		const response = NextResponse.json({ success: true });
 
-		response.cookies.set("auth", responsePayload.data.access_token, {
+		response.cookies.set("JOURNAL_AUTH", responsePayload.data.access_token, {
 			httpOnly: true,
 			path: "/",
 			secure: true,

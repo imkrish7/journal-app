@@ -25,11 +25,11 @@ export default function Page({ children }: IProps) {
 				}
 			>
 				<AppSidebar />
-				<SidebarInset className="bg-transparent">
+				<SidebarInset className="bg-transparent min-h-screen">
 					<header className="sticky top-0 flex shrink-0 items-center gap-2  p-4 z-10">
 						<SidebarTrigger />
 					</header>
-					<div className="flex flex-1 flex-col gap-4">
+					<div className="flex flex-1 flex-col gap-4 min-h-inherit z-1">
 						<Suspense fallback={<RobotLottie />}>{children}</Suspense>
 					</div>
 					<div className="bg-indigo-400 backdrop-blur-xs w-8 h-8 sm:w-40 sm:h-40 rounded-full absolute top-1 opacity-20 left-0  z-0"></div>

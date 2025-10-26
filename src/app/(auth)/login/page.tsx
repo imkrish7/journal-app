@@ -13,16 +13,16 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import React, { startTransition } from "react";
+import React, { startTransition, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/schema/auth";
 import z from "zod";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 const Page = () => {
-	const router = useRouter();
+	const [goto, setGoto] = useState<string | null>(null);
 	const form = useForm({
 		resolver: zodResolver(loginSchema),
 		defaultValues: {
@@ -44,11 +44,16 @@ const Page = () => {
 			if (!response) {
 				toast.error("Failed to login");
 			} else {
-				toast.success("User is logged in now!");
-				router.replace("/dashboard");
+				toast.success("logged in!");
+				setGoto("/dashboard");
 			}
 		});
 	};
+
+	if (goto) {
+		redirect(goto);
+	}
+
 	return (
 		<div className="w-full relative flex min-h-inherit items-center justify-center">
 			<Card className="w-[350px] background sm:w-2xl lg:w-4xl py-2 sm:p-0 border-0 shadow-none flex justify-center gap-0">
