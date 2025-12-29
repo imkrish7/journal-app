@@ -13,8 +13,7 @@ export const config = {
 };
 
 export default async function proxy(request: NextRequest) {
-	const hasCookie = request.cookies.get("JOURNAL_AUTH");
-	console.log(hasCookie);
+	const hasCookie = request.cookies.get("auth");
 	if (!hasCookie && privateRoutes.includes(request.nextUrl.pathname)) {
 		return NextResponse.redirect(new URL("/login", request.url));
 	}

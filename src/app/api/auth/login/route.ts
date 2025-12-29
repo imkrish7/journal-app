@@ -4,7 +4,7 @@ import { loginSchema } from "@/schema/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-	const clonedRequest = await request.clone();
+	const clonedRequest = request.clone();
 	const requestPayload = await clonedRequest.json();
 	const validatedPayload = loginSchema.safeParse(requestPayload);
 
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
 			(await result.json()) as APIResponse<ILoginResponse>;
 		const response = NextResponse.json({ success: true });
 
-		response.cookies.set("JOURNAL_AUTH", responsePayload.data.access_token, {
+		response.cookies.set("auth", responsePayload.data.access_token, {
 			httpOnly: true,
 			path: "/",
 			secure: true,

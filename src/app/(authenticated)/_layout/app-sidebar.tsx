@@ -29,7 +29,8 @@ const data = {
 	user: {
 		name: "shadcn",
 		email: "m@example.com",
-		avatar: "/avatars/shadcn.jpg",
+		avatar:
+			"https://images.pexels.com/photos/9558782/pexels-photo-9558782.jpeg",
 	},
 	navMain: [
 		{
@@ -76,7 +77,6 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-	// const [activeItem, setActiveItem] = useState(data.navMain[0]);
 	const router = useRouter();
 	const { state } = useSidebar();
 	const isMobile = useIsMobile();

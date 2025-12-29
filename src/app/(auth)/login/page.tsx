@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import React, { startTransition, useState } from "react";
+import { startTransition, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/schema/auth";
@@ -33,19 +33,23 @@ const Page = () => {
 
 	const handleLogin = (data: z.infer<typeof loginSchema>) => {
 		startTransition(async () => {
-			const response = await fetch("/api/auth/login", {
-				method: "POST",
-				body: JSON.stringify(data),
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
+			try {
+				const response = await fetch("/api/auth/login", {
+					method: "POST",
+					body: JSON.stringify(data),
+					headers: {
+						"Content-Type": "application/json",
+					},
+				});
 
-			if (!response) {
-				toast.error("Failed to login");
-			} else {
-				toast.success("logged in!");
-				setGoto("/dashboard");
+				if (!response.ok) {
+					toast.error("Failed to login");
+				} else {
+					toast.success("logged in!");
+					setGoto("/dashboard");
+				}
+			} catch (error) {
+				console.error(error);
 			}
 		});
 	};

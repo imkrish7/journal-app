@@ -19,7 +19,7 @@ const Features = () => {
 					</CardTitle>
 				</CardHeader>
 				<CardContent>
-					<div className="grid grid-cols-1 gap-2 md:justify-center md:grid-cols-2 lg:grid-cols-3">
+					<div className="grid grid-cols-1 gap-2 place-items-center md:justify-center md:grid-cols-2 lg:grid-cols-3">
 						<div className="bg-white relative rounded-md w-xs shadow ml-2 h-[200px] backdrop-blur-lg p-2 flex flex-col justify-center">
 							<span className="text-lg font-semibold text-gray-500">
 								Make it personal.
@@ -32,7 +32,7 @@ const Features = () => {
 							<div className="bg-red-300 backdrop-blur-xs animate-wiggle rounded-bl-[100px] w-8 h-8 sm:w-20 sm:h-20 absolute top-0 right-0 opacity-20 z-0"></div>
 							<div className="bg-indigo-300 backdrop-blur-xs -rotate-45 h-10 w-10 sm:w-20 sm:h-20 absolute bottom-10 right-10 opacity-40 z-0"></div>
 						</div>
-						<div className="bg-white relative rounded-md w-xs shadow ml-2 h-[200px] backdrop-blur-lg p-2 flex flex-col justify-center">
+						<div className="bg-white relative rounded-md w-xs shadow ml-2 h-[200px] backdrop-blur-lg p-2 flex flex-col justify-center items-center">
 							<span className="text-lg font-semibold text-gray-500">
 								Build a bond that remembers.
 							</span>
