@@ -8,7 +8,7 @@ interface IProps {
 	role: "USER" | "AI" | string;
 	createdAt: number;
 	userAvatarLink: string | undefined;
-	type: "ERROR" | "VALID" | string;
+	type: "ERROR" | "VALID" | "QUESTION" | string;
 }
 
 const Message: FC<IProps> = ({ role, userAvatarLink, content, type }) => {
@@ -36,15 +36,22 @@ const Message: FC<IProps> = ({ role, userAvatarLink, content, type }) => {
 			<div
 				className={`w-[50%] rounded-md flex ${
 					role === "AI" ? "justify-end" : "justify-start"
-				}`}
+				} `}
 			>
 				<div
-					className={`px-2 py-1 rounded-md bg-white/50 backdrop-blur-3xl inline-flex`}
+					className={`px-2 py-1 rounded-md  backdrop-blur-3xl inline-flex ${
+						type == "QUESTION" ? "bg-purple-200" : "bg-white/50"
+					}`}
 				>
-					<div className="flex flex-col">
-						<span className={`text-sm font-normal text-gray-600 inline-flex`}>
+					<div className={`flex flex-col`}>
+						<span
+							className={`text-sm font-normal text-gray-600 inline-flex ${
+								type == "QUESTION" ? "text-purple-600 font-semibold" : ""
+							}`}
+						>
 							{content}
 						</span>
+
 						<div
 							className={`flex ${
 								role === "AI" ? "justify-end" : "justify-start"

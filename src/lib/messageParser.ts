@@ -23,7 +23,9 @@ export const createParser = () => {
 
 				try {
 					const parsed = JSON.parse(data) as IStreamMessage;
-					return Object.values(parsed).includes(parsed.type) ? parsed : null;
+					return Object.values(IStreamMessageType).includes(parsed.type)
+						? parsed
+						: null;
 				} catch (error) {
 					console.error(error);
 					return {

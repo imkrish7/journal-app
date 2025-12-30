@@ -16,6 +16,7 @@ export enum IStreamMessageType {
 	Token = "token",
 	Error = "error",
 	Connected = "connected",
+	Interrupt = "interrupt",
 	Done = "done",
 	ToolStart = "tool_start",
 	ToolEnd = "tool_end",
@@ -28,6 +29,11 @@ export interface IBaseStreamMessage {
 export interface ITokenMessage extends IBaseStreamMessage {
 	type: IStreamMessageType.Token;
 	token: string;
+}
+
+export interface IInterrruptMessage extends IBaseStreamMessage {
+	type: IStreamMessageType.Interrupt;
+	question: string;
 }
 
 export interface IErrorMessage extends IBaseStreamMessage {
@@ -61,4 +67,5 @@ export type IStreamMessage =
 	| IConnectedMessage
 	| IDoneMessage
 	| IToolStartMessage
-	| IToolEndMessage;
+	| IToolEndMessage
+	| IInterrruptMessage;

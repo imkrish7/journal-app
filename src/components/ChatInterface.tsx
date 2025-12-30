@@ -10,14 +10,15 @@ interface IProps {
 const ChatInterface: FC<IProps> = ({ chatAction }) => {
 	const [message, setMessage] = useState<string>();
 
-	const sendMessage = () => {
+	const sendMessage = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 		if (message) {
-			chatAction(message);
+			await chatAction(message);
 		}
 	};
 
 	return (
-		<div className="flex items-center gap-2 w-full">
+		<form onSubmit={sendMessage} className="flex items-center gap-2 w-full">
 			<div className="w-[60px] h-[60px]">
 				<RobotLottie />
 			</div>
@@ -28,8 +29,8 @@ const ChatInterface: FC<IProps> = ({ chatAction }) => {
 					setMessage(event.target.value);
 				}}
 			/>
-			<Button onClick={sendMessage}>Send</Button>
-		</div>
+			<Button>Send</Button>
+		</form>
 	);
 };
 

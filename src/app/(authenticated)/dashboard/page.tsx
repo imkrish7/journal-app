@@ -3,7 +3,7 @@ import ChatInterface from "@/components/ChatInterface";
 import Message from "@/components/Message";
 import { IStreamMessageType } from "@/interface/chat";
 import { createParser } from "@/lib/messageParser";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 interface IMessage {
@@ -48,12 +48,14 @@ const formatTerminalOutput = (
 const Page = () => {
 	const [messages, setMessages] = useState<IMessage[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [question, setQuestion] = useState<string>("");
 	const messageRef = useRef<HTMLDivElement | null>(null);
 	const [currentTool, setCurrentTool] = useState<{
 		name: string;
 		input: unknown;
 	} | null>(null);
-	const [streamResponse, setStreamResponse] = useState("");
+	// const [streamResponse, setStreamResponse] = useState("");
+	const streamResponse = useRef("");
 
 	const processStream = async (
 		reader: ReadableStreamDefaultReader<Uint8Array>,
@@ -84,6 +86,10 @@ const Page = () => {
 			type: "VALID",
 		};
 
+		// setStreamResponse("");
+		setCurrentTool(null);
+		// setIsLoading(false);
+
 		setMessages([...messages, optimisticMessage]);
 
 		let fullResponse = "";
@@ -107,18 +113,19 @@ const Page = () => {
 			const parser = createParser();
 			const reader = response.body.getReader();
 
+			setIsLoading(false);
+
 			await processStream(reader, async (chunk) => {
 				const messages = parser.parse(chunk);
 
 				for (const msg of messages) {
 					switch (msg.type) {
 						case IStreamMessageType.Token:
-							console.log("Here");
 							if ("token" in msg) {
 								fullResponse += msg.token;
-								setStreamResponse(fullResponse);
+								// setStreamResponse((prev) => prev + msg.token);
+								streamResponse.current += msg.token;
 							}
-							console.log("Not here");
 							break;
 						case IStreamMessageType.ToolStart:
 							if ("tool" in msg) {
@@ -133,7 +140,8 @@ const Page = () => {
 									"processing..."
 								);
 
-								setStreamResponse(fullResponse);
+								// setStreamResponse(fullResponse);
+								streamResponse.current = fullResponse;
 							}
 							break;
 						case IStreamMessageType.ToolEnd:
@@ -146,9 +154,16 @@ const Page = () => {
 									fullResponse =
 										fullResponse.substring(0, lastTerminalIndex) +
 										formatTerminalOutput(msg.tool, msg.type, msg.output);
-									setStreamResponse(fullResponse);
+									// setStreamResponse(fullResponse);
+									streamResponse.current = fullResponse;
 								}
 								setCurrentTool(null);
+							}
+							break;
+						case IStreamMessageType.Interrupt:
+							if ("question" in msg) {
+								setQuestion(msg.question);
+								streamResponse.current = "";
 							}
 							break;
 						case IStreamMessageType.Done:
@@ -162,21 +177,14 @@ const Page = () => {
 							};
 
 							setMessages((prev) => [...prev, _message]);
-							setStreamResponse("");
+							// setStreamResponse("");
+							streamResponse.current = "";
 							break;
 
 						case IStreamMessageType.Error:
 							if ("error" in msg) {
 								toast.error(msg.error);
-								const _message: IMessage = {
-									_id: `temp_assitants_${Date.now()}`,
-									content: msg.error,
-									role: "AI",
-									userAvatarLink: "",
-									createdAt: Date.now(),
-									type: "VALID",
-								};
-								setMessages((prev) => [...prev, _message]);
+
 								throw new Error(msg.error);
 							}
 							break;
@@ -184,12 +192,17 @@ const Page = () => {
 				}
 			});
 		} catch (error) {
-			setStreamResponse(
-				formatTerminalOutput(
-					"error",
-					"Failed to process message",
-					error instanceof Error ? error.message : "Unknown error"
-				)
+			// setStreamResponse(
+			// 	formatTerminalOutput(
+			// 		"error",
+			// 		"Failed to process message",
+			// 		error instanceof Error ? error.message : "Unknown error"
+			// 	)
+			// );
+			streamResponse.current = formatTerminalOutput(
+				"error",
+				"Failed to process message",
+				error instanceof Error ? error.message : "Unknown error"
 			);
 		} finally {
 			setIsLoading(false);
@@ -208,10 +221,10 @@ const Page = () => {
 				{messages.map((_message) => {
 					return <Message key={_message._id} {..._message} />;
 				})}
-				{streamResponse.length > 0 && (
+				{streamResponse.current && (
 					<Message
 						{...{
-							content: streamResponse,
+							content: streamResponse.current,
 							userAvatarLink: "",
 							role: "AI",
 							_id: `temp_assitants_${Date.now()}`,
@@ -220,7 +233,19 @@ const Page = () => {
 						}}
 					/>
 				)}
-				{isLoading && !streamResponse && (
+				{question && (
+					<Message
+						{...{
+							content: question,
+							userAvatarLink: "",
+							role: "AI",
+							_id: `temp_assitants_${Date.now()}`,
+							createdAt: Date.now(),
+							type: "QUESTION",
+						}}
+					/>
+				)}
+				{isLoading && !streamResponse.current && (
 					<div className="flex justify-end animate-in fade-in-0">
 						<div className="rounded-2xl px-4 py-3 bg-white text-gray-900 rounded-bl-none shadow-sm ring-1 ring-inset ring-gray-200">
 							<div className="flex items-center gap-1.5">
