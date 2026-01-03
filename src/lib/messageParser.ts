@@ -4,6 +4,11 @@ import {
 	SSE_DATA_PREFIX,
 	SSE_DONE_MESSAGE,
 } from "@/interface/chat";
+import { IEvent } from "@/interface/todo";
+
+const deepJson = (payload: IEvent) => {
+	return JSON.parse(payload["arguments"].toString());
+};
 
 export const createParser = () => {
 	let buffer = "";
@@ -12,7 +17,7 @@ export const createParser = () => {
 		const lines = (buffer + chunk).split("\n");
 		buffer = lines.pop() || "";
 
-		return lines
+		const l = lines
 			.map((line) => {
 				const trimmed = line.trim();
 
@@ -23,6 +28,11 @@ export const createParser = () => {
 
 				try {
 					const parsed = JSON.parse(data) as IStreamMessage;
+					if (parsed.type === IStreamMessageType.Event) {
+						parsed["data"]["event"]["arguments"] = deepJson(
+							parsed["data"]["event"]
+						);
+					}
 					return Object.values(IStreamMessageType).includes(parsed.type)
 						? parsed
 						: null;
@@ -35,6 +45,8 @@ export const createParser = () => {
 				}
 			})
 			.filter((msg): msg is IStreamMessage => msg !== null);
+
+		return l;
 	};
 
 	return { parse };

@@ -1,3 +1,5 @@
+import { IEvent } from "./todo";
+
 export type MessageRole = "USER" | "AI" | string;
 export const SSE_DATA_PREFIX = "data: " as const;
 export const SSE_DONE_MESSAGE = "[DONE]" as const;
@@ -20,6 +22,7 @@ export enum IStreamMessageType {
 	Done = "done",
 	ToolStart = "tool_start",
 	ToolEnd = "tool_end",
+	Event = "event",
 }
 
 export interface IBaseStreamMessage {
@@ -61,6 +64,13 @@ export interface IToolEndMessage extends IBaseStreamMessage {
 	output: unknown;
 }
 
+export interface IChatEvent extends IBaseStreamMessage {
+	type: IStreamMessageType.Event;
+	data: {
+		event: IEvent;
+	};
+}
+
 export type IStreamMessage =
 	| ITokenMessage
 	| IErrorMessage
@@ -68,4 +78,5 @@ export type IStreamMessage =
 	| IDoneMessage
 	| IToolStartMessage
 	| IToolEndMessage
-	| IInterrruptMessage;
+	| IInterrruptMessage
+	| IChatEvent;

@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function POST() {
 	const cookieStore = await cookies();
 
-	cookieStore.delete("JOURNAL_AUTH");
+	cookieStore.delete("auth");
 
 	return NextResponse.json({ success: true });
 }

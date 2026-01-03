@@ -1,7 +1,9 @@
 "use client";
 import ChatInterface from "@/components/ChatInterface";
 import Message from "@/components/Message";
+import Todo from "@/components/Todo";
 import { IStreamMessageType } from "@/interface/chat";
+import { IEvent } from "@/interface/todo";
 import { createParser } from "@/lib/messageParser";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -48,7 +50,9 @@ const formatTerminalOutput = (
 const Page = () => {
 	const [messages, setMessages] = useState<IMessage[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [eventData, setEventData] = useState<IEvent | null>(null);
 	const [question, setQuestion] = useState<string>("");
+	const [error, setError] = useState<boolean>(false);
 	const messageRef = useRef<HTMLDivElement | null>(null);
 	const [currentTool, setCurrentTool] = useState<{
 		name: string;
@@ -86,9 +90,7 @@ const Page = () => {
 			type: "VALID",
 		};
 
-		// setStreamResponse("");
 		setCurrentTool(null);
-		// setIsLoading(false);
 
 		setMessages([...messages, optimisticMessage]);
 
@@ -116,8 +118,9 @@ const Page = () => {
 			setIsLoading(false);
 
 			await processStream(reader, async (chunk) => {
+				console.log(chunk);
 				const messages = parser.parse(chunk);
-
+				console.log(messages);
 				for (const msg of messages) {
 					switch (msg.type) {
 						case IStreamMessageType.Token:
@@ -160,6 +163,13 @@ const Page = () => {
 								setCurrentTool(null);
 							}
 							break;
+						case IStreamMessageType.Event:
+							if ("data" in msg) {
+								setEventData({
+									...msg.data.event,
+								});
+							}
+							break;
 						case IStreamMessageType.Interrupt:
 							if ("question" in msg) {
 								setQuestion(msg.question);
@@ -177,7 +187,7 @@ const Page = () => {
 							};
 
 							setMessages((prev) => [...prev, _message]);
-							// setStreamResponse("");
+
 							streamResponse.current = "";
 							break;
 
@@ -199,11 +209,26 @@ const Page = () => {
 			// 		error instanceof Error ? error.message : "Unknown error"
 			// 	)
 			// );
-			streamResponse.current = formatTerminalOutput(
-				"error",
-				"Failed to process message",
-				error instanceof Error ? error.message : "Unknown error"
-			);
+
+			// if (error instanceof Error) {
+			// 	console.log(error);
+			// }
+			const errorMessage = {
+				content: formatTerminalOutput(
+					"error",
+					"Failed to process message",
+					error instanceof Error ? error.message : "Unknown error"
+				),
+				userAvatarLink: "",
+				role: "AI",
+				_id: `temp_assitants_${Date.now()}`,
+				createdAt: Date.now(),
+				type: "ERROR",
+			};
+
+			setMessages((prev) => [...prev, errorMessage]);
+			streamResponse.current = "";
+			setError(false);
 		} finally {
 			setIsLoading(false);
 		}
@@ -214,14 +239,15 @@ const Page = () => {
 		}
 	}, [messages]);
 
-	console.log(streamResponse);
+	console.log(eventData);
 	return (
 		<div className="flex flex-col relative h-[calc(100vh-theme(spacing.14))] w-full px-2">
 			<div className="flex-1 gap-2 flex flex-col overflow-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
 				{messages.map((_message) => {
 					return <Message key={_message._id} {..._message} />;
 				})}
-				{streamResponse.current && (
+				{eventData && <Todo data={eventData.arguments} />}
+				{streamResponse.current && !error && (
 					<Message
 						{...{
 							content: streamResponse.current,
@@ -230,6 +256,18 @@ const Page = () => {
 							_id: `temp_assitants_${Date.now()}`,
 							createdAt: Date.now(),
 							type: "VALID",
+						}}
+					/>
+				)}
+				{error && (
+					<Message
+						{...{
+							content: streamResponse.current,
+							userAvatarLink: "",
+							role: "AI",
+							_id: `temp_assitants_${Date.now()}`,
+							createdAt: Date.now(),
+							type: "ERROR",
 						}}
 					/>
 				)}

@@ -11,7 +11,18 @@ interface IProps {
 	type: "ERROR" | "VALID" | "QUESTION" | string;
 }
 
+const formatMessage = (content: string): string => {
+	content = content.replace(/\\\\/g, "\\");
+
+	content = content.replace(/\\n/g, "\n");
+
+	content = content.replace(/---START---\n?/g, "").replace(/\n?---END---/g, "");
+
+	return content.trim();
+};
+
 const Message: FC<IProps> = ({ role, userAvatarLink, content, type }) => {
+	console.log(formatMessage(content), type);
 	return (
 		<div
 			className={`flex flex-col items-end ${
@@ -44,13 +55,15 @@ const Message: FC<IProps> = ({ role, userAvatarLink, content, type }) => {
 					}`}
 				>
 					<div className={`flex flex-col`}>
-						<span
-							className={`text-sm font-normal text-gray-600 inline-flex ${
-								type == "QUESTION" ? "text-purple-600 font-semibold" : ""
-							}`}
-						>
-							{content}
-						</span>
+						{type !== "ERROR" && (
+							<span
+								className={`text-sm font-normal text-gray-600 inline-flex ${
+									type == "QUESTION" ? "text-purple-600 font-semibold" : ""
+								}`}
+							>
+								{content}
+							</span>
+						)}
 
 						<div
 							className={`flex ${
@@ -58,7 +71,9 @@ const Message: FC<IProps> = ({ role, userAvatarLink, content, type }) => {
 							}`}
 						>
 							{type === "ERROR" ? (
-								<div dangerouslySetInnerHTML={{ __html: content }} />
+								<div
+									dangerouslySetInnerHTML={{ __html: formatMessage(content) }}
+								/>
 							) : (
 								<span className="text-xs font-medium text-gray-400">
 									{`${new Date().getHours()}:${new Date().getMinutes()}`}
