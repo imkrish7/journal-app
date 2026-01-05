@@ -3,7 +3,7 @@ export interface ITodo {
 	description: string;
 	deadline: string;
 	priority: string;
-	_id: string;
+	id: string;
 }
 
 export interface IEvent {

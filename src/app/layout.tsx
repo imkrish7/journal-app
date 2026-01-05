@@ -1,17 +1,5 @@
-// import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "sonner";
-
-// export const metadata: Metadata = {
-//   title: "journal",
-//   description: "A bot like campanion",
-// };
-
-export const logoFont = localFont({
-	src: "../../public/fonts/MarckScript-Regular.ttf",
-	display: "optional",
-});
 
 export default function RootLayout({
 	children,

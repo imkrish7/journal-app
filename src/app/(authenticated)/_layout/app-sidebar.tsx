@@ -13,7 +13,6 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
-import { logoFont } from "@/app/layout";
 import MemoryLottie from "@/components/icons/MemoryLottie";
 import TodoLottie from "@/components/icons/TodoLottie";
 import ReminderLottie from "@/components/icons/ReminderLottie";
@@ -22,6 +21,7 @@ import TrashLottie from "@/components/icons/TrashLottie";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { logoFont } from "@/fonts";
 import HomeLottie from "@/components/icons/HomeLottie";
 
 // This is sample data
