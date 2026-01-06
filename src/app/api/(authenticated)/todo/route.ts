@@ -2,7 +2,8 @@ import { ITodo } from "@/interface/todo";
 import { APIResponse } from "@/networkingServices/method";
 import { NextRequest, NextResponse } from "next/server";
 
-export default async function GET(request: NextRequest) {
+export async function GET(request: NextRequest) {
+	console.log("GET request received");
 	const proxyURL = new URL("/todo/all", "http://localhost:8000");
 
 	const proxyRequest = new NextRequest(proxyURL, request);

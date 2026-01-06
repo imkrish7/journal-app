@@ -22,14 +22,13 @@ const formatMessage = (content: string): string => {
 };
 
 const Message: FC<IProps> = ({ role, userAvatarLink, content, type }) => {
-	console.log(formatMessage(content), type);
 	return (
 		<div
 			className={`flex flex-col items-end ${
 				role == "AI" ? "items-end" : "items-start"
 			}`}
 		>
-			<div className={`w-[40px] h-[40px] rounded-full bg-gray-200 p-1`}>
+			<div className={`w-10 h-10 rounded-full bg-gray-200 p-1`}>
 				{role === "AI" ? (
 					<RobotLottie />
 				) : (

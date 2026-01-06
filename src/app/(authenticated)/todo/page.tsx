@@ -2,7 +2,7 @@
 import Todo from "@/components/Todo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { get } from "@/networkingServices/method";
+// import { get } from "@/networkingServices/method";
 import { FilterIcon, PlusIcon } from "lucide-react";
 import React, { useEffect, useTransition, useState } from "react";
 import { ITodo } from "@/interface/todo";
@@ -14,13 +14,13 @@ const Page = () => {
 
 	useEffect(() => {
 		startTransition(async () => {
-			try {
-				const data = await get<ITodo[], null>("/api/todo", null);
-				console.log(data);
-				setTodos(data);
-			} catch (error) {
-				console.error(error);
-			}
+			// try {
+			// 	const data = await get<ITodo[], null>("/api/todo", null);
+			// 	console.log(data);
+			// 	setTodos(data);
+			// } catch (error) {
+			// 	console.error(error);
+			// }
 		});
 	}, []);
 

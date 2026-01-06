@@ -25,9 +25,10 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
-import { startTransition, useState } from "react";
+import { startTransition } from "react";
 import { toast } from "sonner";
-import { redirect, RedirectType } from "next/navigation";
+import { logoutAction } from "@/app/actions/auth";
+import { useRouter } from "next/navigation";
 
 export function NavUser({
 	user,
@@ -38,30 +39,20 @@ export function NavUser({
 		avatar: string;
 	};
 }) {
-	const [redirectURL, setRedirectURL] = useState<string | null>(null);
 	const { isMobile } = useSidebar();
+	const router = useRouter();
 
 	const handleLogout = () => {
 		startTransition(async () => {
 			try {
-				const response = await fetch("/api/auth/logout", {
-					method: "POST",
-				});
-				if (!response.ok) {
-					toast.error("Failed to logout!");
-				}
-				toast.success("Logged out!");
-				setRedirectURL("/");
+				await logoutAction();
+				router.push("/login");
 			} catch (error) {
 				console.error(error);
 				toast.error("Failed to logout");
 			}
 		});
 	};
-
-	if (redirectURL) {
-		redirect(redirectURL, RedirectType.replace);
-	}
 
 	return (
 		<SidebarMenu>
