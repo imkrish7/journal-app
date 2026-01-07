@@ -7,6 +7,7 @@ import { IEvent } from "@/interface/todo";
 import { createParser } from "@/lib/messageParser";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
 
 interface IMessage {
 	_id: string;
@@ -79,7 +80,8 @@ const Page = () => {
 	};
 
 	const chatAction = async (userMessage: string) => {
-		setIsLoading(true);
+		userMessage = userMessage.trim();
+		if (!userMessage || isLoading) return;
 		const optimisticMessage = {
 			_id: `temp_${Date.now()}`,
 			content: userMessage,
@@ -90,7 +92,8 @@ const Page = () => {
 		};
 
 		setCurrentTool(null);
-
+		setStreamResponse("");
+		setIsLoading(true);
 		setMessages([...messages, optimisticMessage]);
 
 		let fullResponse = "";
@@ -197,17 +200,7 @@ const Page = () => {
 				}
 			});
 		} catch (error) {
-			// setStreamResponse(
-			// 	formatTerminalOutput(
-			// 		"error",
-			// 		"Failed to process message",
-			// 		error instanceof Error ? error.message : "Unknown error"
-			// 	)
-			// );
-
-			// if (error instanceof Error) {
-			// 	console.log(error);
-			// }
+			console.log(error);
 			const errorMessage = {
 				content: formatTerminalOutput(
 					"error",
@@ -242,13 +235,14 @@ const Page = () => {
 					return <Message key={_message._id} {..._message} />;
 				})}
 				{eventData && <Todo data={eventData.arguments} />}
-				{streamResponse.length > 0 && !error && (
+				{streamResponse && (
 					<Message
+						key={uuidv4()}
 						{...{
 							content: streamResponse,
 							userAvatarLink: "",
 							role: "AI",
-							_id: `temp_assitants_${Date.now()}`,
+							_id: `temp_assitants_${uuidv4()}`,
 							createdAt: Date.now(),
 							type: "VALID",
 						}}

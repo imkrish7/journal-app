@@ -2,29 +2,25 @@
 import Todo from "@/components/Todo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// import { get } from "@/networkingServices/method";
 import { FilterIcon, PlusIcon } from "lucide-react";
-import React, { useEffect, useTransition, useState } from "react";
 import { ITodo } from "@/interface/todo";
-import Loading from "../loading";
+import { fetchTodosAction } from "@/app/actions/todo";
+import { useState, useEffect, startTransition } from "react";
+import { toast } from "sonner";
 
 const Page = () => {
 	const [todos, setTodos] = useState<ITodo[]>([]);
-	const [isPending, startTransition] = useTransition();
-
 	useEffect(() => {
 		startTransition(async () => {
-			// try {
-			// 	const data = await get<ITodo[], null>("/api/todo", null);
-			// 	console.log(data);
-			// 	setTodos(data);
-			// } catch (error) {
-			// 	console.error(error);
-			// }
+			const { data, error } = await fetchTodosAction<ITodo[]>();
+			if (!error && data) {
+				setTodos(data);
+			} else {
+				toast.error("Error fetching todos");
+			}
 		});
 	}, []);
 
-	console.log(isPending);
 	return (
 		<div className="flex flex-col w-full items-center justify-center">
 			<Card className="shadow-none border-none">
@@ -42,9 +38,7 @@ const Page = () => {
 							Filter
 						</Button>
 					</div>
-					{isPending ? (
-						<Loading />
-					) : todos.length > 0 ? (
+					{todos && todos.length > 0 ? (
 						todos.map((todo: ITodo) => <Todo key={todo.id} data={todo} />)
 					) : (
 						<div className="text-center">No tasks found</div>
