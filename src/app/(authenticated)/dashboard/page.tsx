@@ -7,6 +7,7 @@ import { IEvent } from "@/interface/todo";
 import { createParser } from "@/lib/messageParser";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
 
 interface IMessage {
 	_id: string;
@@ -25,7 +26,7 @@ const formatToolOutput = (output: unknown): string => {
 const formatTerminalOutput = (
 	tool: string,
 	input: unknown,
-	output: unknown
+	output: unknown,
 ) => {
 	const terminalHtml = `<div class="bg-[#1e1e1e] text-white font-mono p-2 rounded-md my-2 overflow-x-auto whitespace-normal max-w-[600px]">
       <div class="flex items-center gap-1.5 border-b border-gray-700 pb-1">
@@ -36,11 +37,11 @@ const formatTerminalOutput = (
       </div>
       <div class="text-gray-400 mt-1">$ Input</div>
       <pre class="text-yellow-400 mt-0.5 whitespace-pre-wrap overflow-x-auto">${formatToolOutput(
-				input
+				input,
 			)}</pre>
       <div class="text-gray-400 mt-2">$ Output</div>
       <pre class="text-green-400 mt-0.5 whitespace-pre-wrap overflow-x-auto">${formatToolOutput(
-				output
+				output,
 			)}</pre>
     </div>`;
 
@@ -58,12 +59,11 @@ const Page = () => {
 		name: string;
 		input: unknown;
 	} | null>(null);
-	// const [streamResponse, setStreamResponse] = useState("");
-	const streamResponse = useRef("");
+	const [streamResponse, setStreamResponse] = useState("");
 
 	const processStream = async (
 		reader: ReadableStreamDefaultReader<Uint8Array>,
-		onChunk: (chunk: string) => Promise<void>
+		onChunk: (chunk: string) => Promise<void>,
 	) => {
 		try {
 			while (true) {
@@ -80,7 +80,8 @@ const Page = () => {
 	};
 
 	const chatAction = async (userMessage: string) => {
-		setIsLoading(true);
+		userMessage = userMessage.trim();
+		if (!userMessage || isLoading) return;
 		const optimisticMessage = {
 			_id: `temp_${Date.now()}`,
 			content: userMessage,
@@ -91,7 +92,8 @@ const Page = () => {
 		};
 
 		setCurrentTool(null);
-
+		setStreamResponse("");
+		setIsLoading(true);
 		setMessages([...messages, optimisticMessage]);
 
 		let fullResponse = "";
@@ -118,16 +120,14 @@ const Page = () => {
 			setIsLoading(false);
 
 			await processStream(reader, async (chunk) => {
-				console.log(chunk);
 				const messages = parser.parse(chunk);
-				console.log(messages);
+
 				for (const msg of messages) {
 					switch (msg.type) {
 						case IStreamMessageType.Token:
 							if ("token" in msg) {
 								fullResponse += msg.token;
-								// setStreamResponse((prev) => prev + msg.token);
-								streamResponse.current += msg.token;
+								setStreamResponse((prev) => prev + msg.token);
 							}
 							break;
 						case IStreamMessageType.ToolStart:
@@ -140,25 +140,23 @@ const Page = () => {
 								fullResponse += formatTerminalOutput(
 									msg.tool,
 									msg.input,
-									"processing..."
+									"processing...",
 								);
 
-								// setStreamResponse(fullResponse);
-								streamResponse.current = fullResponse;
+								setStreamResponse(fullResponse);
 							}
 							break;
 						case IStreamMessageType.ToolEnd:
 							if ("tool" in msg && currentTool) {
 								const lastTerminalIndex = fullResponse.lastIndexOf(
-									"<div class='bg-[#1e1e1e]'"
+									"<div class='bg-[#1e1e1e]'",
 								);
 
 								if (lastTerminalIndex !== -1) {
 									fullResponse =
 										fullResponse.substring(0, lastTerminalIndex) +
 										formatTerminalOutput(msg.tool, msg.type, msg.output);
-									// setStreamResponse(fullResponse);
-									streamResponse.current = fullResponse;
+									setStreamResponse(fullResponse);
 								}
 								setCurrentTool(null);
 							}
@@ -173,7 +171,7 @@ const Page = () => {
 						case IStreamMessageType.Interrupt:
 							if ("question" in msg) {
 								setQuestion(msg.question);
-								streamResponse.current = "";
+								setStreamResponse("");
 							}
 							break;
 						case IStreamMessageType.Done:
@@ -188,7 +186,7 @@ const Page = () => {
 
 							setMessages((prev) => [...prev, _message]);
 
-							streamResponse.current = "";
+							setStreamResponse("");
 							break;
 
 						case IStreamMessageType.Error:
@@ -202,22 +200,12 @@ const Page = () => {
 				}
 			});
 		} catch (error) {
-			// setStreamResponse(
-			// 	formatTerminalOutput(
-			// 		"error",
-			// 		"Failed to process message",
-			// 		error instanceof Error ? error.message : "Unknown error"
-			// 	)
-			// );
-
-			// if (error instanceof Error) {
-			// 	console.log(error);
-			// }
+			console.log(error);
 			const errorMessage = {
 				content: formatTerminalOutput(
 					"error",
 					"Failed to process message",
-					error instanceof Error ? error.message : "Unknown error"
+					error instanceof Error ? error.message : "Unknown error",
 				),
 				userAvatarLink: "",
 				role: "AI",
@@ -227,7 +215,7 @@ const Page = () => {
 			};
 
 			setMessages((prev) => [...prev, errorMessage]);
-			streamResponse.current = "";
+			setStreamResponse("");
 			setError(false);
 		} finally {
 			setIsLoading(false);
@@ -239,7 +227,7 @@ const Page = () => {
 		}
 	}, [messages]);
 
-	console.log(eventData);
+	console.log(streamResponse);
 	return (
 		<div className="flex flex-col relative h-[calc(100vh-theme(spacing.14))] w-full px-2">
 			<div className="flex-1 gap-2 flex flex-col overflow-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
@@ -247,13 +235,14 @@ const Page = () => {
 					return <Message key={_message._id} {..._message} />;
 				})}
 				{eventData && <Todo data={eventData.arguments} />}
-				{streamResponse.current && !error && (
+				{streamResponse && (
 					<Message
+						key={uuidv4()}
 						{...{
-							content: streamResponse.current,
+							content: streamResponse,
 							userAvatarLink: "",
 							role: "AI",
-							_id: `temp_assitants_${Date.now()}`,
+							_id: `temp_assitants_${uuidv4()}`,
 							createdAt: Date.now(),
 							type: "VALID",
 						}}
@@ -262,7 +251,7 @@ const Page = () => {
 				{error && (
 					<Message
 						{...{
-							content: streamResponse.current,
+							content: streamResponse,
 							userAvatarLink: "",
 							role: "AI",
 							_id: `temp_assitants_${Date.now()}`,
@@ -283,7 +272,7 @@ const Page = () => {
 						}}
 					/>
 				)}
-				{isLoading && !streamResponse.current && (
+				{isLoading && !streamResponse && (
 					<div className="flex justify-end animate-in fade-in-0">
 						<div className="rounded-2xl px-4 py-3 bg-white text-gray-900 rounded-bl-none shadow-sm ring-1 ring-inset ring-gray-200">
 							<div className="flex items-center gap-1.5">

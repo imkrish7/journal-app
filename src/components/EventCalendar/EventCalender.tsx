@@ -1,4 +1,4 @@
-import CalendarProvider from "@/providers/CalendarProvider";
+import CalendarProvider from "@/providers/calender-provider";
 import React from "react";
 import Events from "./events";
 import CalenderDates from "./calendar-dates";
