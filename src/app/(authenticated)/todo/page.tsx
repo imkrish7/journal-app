@@ -1,33 +1,20 @@
-"use client";
 import Todo from "@/components/Todo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FilterIcon, PlusIcon } from "lucide-react";
 import { ITodo } from "@/interface/todo";
-import { fetchTodosAction } from "@/app/actions/todo";
-import { useState, useEffect, startTransition } from "react";
-import { toast } from "sonner";
+import { fetchTodos } from "@/lib/todoServices";
 
-const Page = () => {
-	const [todos, setTodos] = useState<ITodo[]>([]);
-	useEffect(() => {
-		startTransition(async () => {
-			const { data, error } = await fetchTodosAction<ITodo[]>();
-			if (!error && data) {
-				setTodos(data);
-			} else {
-				toast.error("Error fetching todos");
-			}
-		});
-	}, []);
+const page = async () => {
+	const { data: todos, error } = await fetchTodos<ITodo[]>();
 
 	return (
-		<div className="flex flex-col w-full items-center justify-center">
-			<Card className="shadow-none border-none">
+		<div className="flex flex-col w-full h-full items-center justify-center py-2">
+			<Card className="shadow-none border-none flex flex-col md:min-w-5xl h-full">
 				<CardHeader className="border-b pb-2">
 					<CardTitle className="text-2xl">To-Do</CardTitle>
 				</CardHeader>
-				<CardContent className="flex flex-col gap-2">
+				<CardContent className="flex flex-col flex-1 gap-2 overflow-hidden">
 					<div className="flex gap-2">
 						<Button className="bg-indigo-600">
 							<PlusIcon />
@@ -38,15 +25,18 @@ const Page = () => {
 							Filter
 						</Button>
 					</div>
-					{todos && todos.length > 0 ? (
-						todos.map((todo: ITodo) => <Todo key={todo.id} data={todo} />)
-					) : (
-						<div className="text-center">No tasks found</div>
-					)}
+					<div className="flex flex-col flex-1 gap-2 overflow-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+						{error && <div>Failed to fetch todos</div>}
+						{!error && todos && todos.length > 0 ? (
+							todos.map((todo: ITodo) => <Todo key={todo.id} data={todo} />)
+						) : (
+							<div className="text-center">No tasks found</div>
+						)}
+					</div>
 				</CardContent>
 			</Card>
 		</div>
 	);
 };
 
-export default Page;
+export default page;
