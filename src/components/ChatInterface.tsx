@@ -30,31 +30,38 @@ const ChatInterface: FC<IProps> = ({ chatAction, haveMessages = false }) => {
 						<div className="h-60 w-90">
 							<RobotLottie />
 						</div>
-						<div>
-							<h1 className="text-4xl font-bold font-serif">
-								Hi, I&apos;m <span>Ylio</span>
+						<div className="text-center space-y-4 mb-12">
+							<h1 className="text-5xl font-serif font-bold text-slate-900 leading-tight">
+								Hi, I&apos;m Aura
 							</h1>
-							<h1 className="text-4xl font-bold font-serif">
+							<p className="text-3xl font-serif text-slate-800">
 								How can I help you?
-							</h1>
+							</p>
 						</div>
 					</div>
 				)}
-				<form
-					onSubmit={sendMessage}
-					className={`relative mt-2 flex flex-col backdrop-blur-md gap-2 w-full h-20 bg-white rounded-md`}
-				>
-					<Input
-						className="bg-white/40 border-none resize-none rounded-xl active:border-none focus-visible:ring-0"
-						placeholder="Talk to me...."
-						onChange={(event) => {
-							setMessage(event.target.value);
-						}}
-					/>
-					<div className="w-full flex justify-end">
-						<Button type="submit">Send</Button>
+				<div className="w-full max-w-2xl relative">
+					<div className="glass p-1 rounded-3xl shadow-xl shadow-slate-200/50 border border-white">
+						<form
+							onSubmit={sendMessage}
+							className="flex items-center gap-4 bg-white rounded-[1.4rem] p-4"
+						>
+							<Input
+								className="flex-1 bg-transparent border-none outline-none text-lg placeholder:text-slate-300 px-2 active:border-none focus-visible:ring-0"
+								placeholder="Talk to me...."
+								onChange={(event) => {
+									setMessage(event.target.value);
+								}}
+							/>
+							<Button
+								className="bg-slate-900 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-indigo-600 transition-all active:scale-95"
+								type="submit"
+							>
+								Send
+							</Button>
+						</form>
 					</div>
-				</form>
+				</div>
 			</div>
 		</div>
 	);

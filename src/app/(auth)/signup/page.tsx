@@ -1,7 +1,12 @@
 "use client";
-import RobotLottie from "@/components/icons/RobotLottie";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 import {
 	Form,
 	FormControl,
@@ -13,7 +18,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema } from "@/schema/auth";
@@ -28,110 +32,113 @@ const Page = () => {
 		},
 	});
 	return (
-		<div className="w-full relative min-h-inherit flex items-center justify-center">
-			<Card className="w-[350px] background sm:w-2xl lg:w-4xl py-2 sm:p-0 border-0 shadow-none flex justify-center gap-0">
-				<CardContent className="w-full grid grid-cols-1 p-2 md:grid-cols-2 md:h-[450px] lg:p-0 items-center ">
-					<div className="w-full rounded-md sm:rounded-l-md sm:h-full flex flex-col items-center justify-center">
-						<div className="text-4xl my-2">
-							<span className="text-gray-100 font-semibold">Welcome</span>
-						</div>
-						<Form {...form}>
-							<form className="w-full px-4 flex justify-center mt-4">
-								<div className="flex w-full relative flex-col gap-4">
-									<FormField
-										control={form.control}
-										name="name"
-										render={() => (
-											<FormItem className="w-full">
-												<FormLabel className="text-gray-100">Name</FormLabel>
-												<FormControl>
-													<div className="flex w-full">
-														<Input
-															className="text-gray-100"
-															placeholder="John doe"
-														/>
-													</div>
-												</FormControl>
-												<FormDescription />
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="email"
-										render={() => (
-											<FormItem className="w-full">
-												<FormLabel className="text-gray-100">Email</FormLabel>
-												<FormControl>
-													<div className="flex w-full">
-														<Input
-															className="text-gray-100"
-															placeholder="Email..."
-														/>
-													</div>
-												</FormControl>
-												<FormDescription />
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="password"
-										render={() => (
-											<FormItem className="w-full">
-												<FormLabel className="text-gray-100">
-													Password
-												</FormLabel>
-												<FormControl>
-													<div className="flex w-full">
-														<Input
-															type="password"
-															className="text-gray-100"
-															placeholder="********************"
-														/>
-													</div>
-												</FormControl>
-												<FormDescription />
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<div className="flex w-full">
-										<Button className="bg-gray-100 text-gray-400">
-											Signup
-										</Button>
-									</div>
-								</div>
-							</form>
-						</Form>
-						<div className="flex">
-							<span className="text-gray-100 font-semibold gap-1 flex">
-								Already have an account?
-								<Link className="underline text-blue-500" href={"/login"}>
-									Login
-								</Link>
-							</span>
-						</div>
-					</div>
-					<div className="hidden md:block relative h-full rounded-r-md">
-						<div className="bg-gray-100 sm:w-20 sm:h-20 lg:w-30 lg:h-30 rounded-full absolute top-0 opacity-20 md:left-56 z-0"></div>
-						<div className="bg-gray-100 rounded-md sm:h-10 w-20 lg:w-30 lg:h-24 absolute top-0 -left-0 opacity-20 z-0"></div>
-						<div className="bg-gray-100 rounded-t-[100px] sm:h-10 sm:w-10 lg:w-20 lg:h-30 absolute top-40 -left-0 opacity-20 z-0"></div>
+		<div className="min-h-screen pt-20 flex items-center justify-center bg-slate-50 relative overflow-hidden">
+			<div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-100 rounded-full blur-[120px] opacity-40"></div>
+			<div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-100 rounded-full blur-[120px] opacity-40"></div>
 
-						<div className="bg-gray-100 sm:w-20 sm:h-20 lg:w-30 lg:h-30 rounded-full absolute bottom-40 opacity-20 right-0  z-0"></div>
-						<div className="bg-gray-100 rounded-md sm:h-10 lg:w-20 lg:w-50 lg:h-20 absolute bottom-0 right-40 opacity-20 z-0"></div>
-						<div className="bg-gray-100 rounded-t-[100px] sm:w-10 sm:h-15 lg:w-20 lg:h-30 absolute bottom-0 right-0 opacity-20 z-0"></div>
-						<RobotLottie />
-					</div>
-				</CardContent>
-			</Card>
-			<div className="bg-violet-300 backdrop-blur-xs w-20 h-20 left-10 md:w-30 md:h-30 lg:w-40 lg:h-40 rounded-full absolute left-0 opacity-40 top-1 z-0"></div>
-			<div className="bg-amber-300 backdrop-blur-xs rounded-md w-28 h-16 md:w-30 md:h-24 lg:w-40 lg:h-24 rotate-45 absolute bottom-10 -left-0 z-0 opacity-20 "></div>
-			<div className="bg-red-300 backdrop-blur-xs rounded-bl-[100px] w-30 h-30 md:h-30 md:w-30 lg:w-40 lg:h-40 absolute top-0  opacity-20 right-0 z-0"></div>
-			<div className="bg-orange-300 backdrop-blur-xs -rotate-45 rounded-t-[100px] w-20 h-40 md:w-20 md:h-30 lg:w-30 lg:h-40  absolute bottom-10 right-20 opacity-20 z-0"></div>
-			<div className="bg-fuchsia-300 backdrop-blur-xs w-20 h-20 md:w-30 md:h-30 lg:w-40 lg:h-40 rounded-full absolute bottom-40 right-0 opacity-20  z-0"></div>
+			<div className="w-full max-w-md px-4 relative z-10 animate-fade-in">
+				<Card className="glass shadow-2xl border-white/50">
+					<CardHeader className="text-center pt-10">
+						<div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 transform rotate-3 shadow-lg shadow-indigo-200">
+							<i className="fa-solid fa-feather-pointed text-white text-3xl"></i>
+						</div>
+						<CardTitle className="text-3xl mb-2">Join Aura</CardTitle>
+						<CardDescription className="text-base">
+							Start your journey of self-discovery today.
+						</CardDescription>
+					</CardHeader>
+
+					<CardContent className="px-8 pb-10">
+						<div className="w-full rounded-md sm:rounded-l-md sm:h-full flex flex-col items-center justify-center">
+							<Form {...form}>
+								<form className="w-full px-4 flex justify-center">
+									<div className="flex w-full relative flex-col">
+										<FormField
+											control={form.control}
+											name="name"
+											render={() => (
+												<FormItem className="w-full">
+													<FormLabel className="text-sm font-semibold text-slate-700 ml-1">
+														Name
+													</FormLabel>
+													<FormControl>
+														<div className="flex w-full relative">
+															<i className="fa-solid fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+															<Input className="pl-11" placeholder="John doe" />
+														</div>
+													</FormControl>
+													<FormDescription />
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+										<FormField
+											control={form.control}
+											name="email"
+											render={() => (
+												<FormItem className="w-full">
+													<FormLabel className="text-sm font-semibold text-slate-700 ml-1">
+														Email
+													</FormLabel>
+													<FormControl>
+														<div className="flex w-full relative">
+															<i className="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+															<Input className="pl-11" placeholder="Email..." />
+														</div>
+													</FormControl>
+													<FormDescription />
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+										<FormField
+											control={form.control}
+											name="password"
+											render={() => (
+												<FormItem className="w-full">
+													<FormLabel className="text-sm font-semibold text-slate-700 ml-1">
+														Password
+													</FormLabel>
+													<FormControl>
+														<div className="flex w-full relative">
+															<i className="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+
+															<Input
+																type="password"
+																className="pl-11"
+																placeholder="********************"
+															/>
+														</div>
+													</FormControl>
+													<FormDescription />
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+										<div className="flex w-full">
+											<Button type="submit" className="w-full mt-2" size="lg">
+												{/* <i className="fa-solid fa-circle-notch animate-spin mr-2"></i> */}
+												Create Account
+											</Button>
+										</div>
+									</div>
+								</form>
+							</Form>
+							<div className="mt-8 text-center">
+								<p className="text-slate-500 text-sm">
+									Already have an account?
+									<Link
+										href="/login"
+										className="ml-2 font-bold text-indigo-600 hover:text-indigo-700 underline underline-offset-4"
+									>
+										Log in here
+									</Link>
+								</p>
+							</div>
+						</div>
+					</CardContent>
+				</Card>
+			</div>
 		</div>
 	);
 };
