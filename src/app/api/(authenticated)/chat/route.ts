@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 		body: req.body,
 		// Crucial: Tells Node not to buffer or cache the response
 		cache: "no-store",
-		duplex: "half",
+		// duplex: "half",
 	});
 
 	console.log(response);

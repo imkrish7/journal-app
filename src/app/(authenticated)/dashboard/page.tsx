@@ -5,7 +5,7 @@ import Todo from "@/components/Todo";
 import { IStreamMessageType } from "@/interface/chat";
 import { IEvent } from "@/interface/todo";
 import { createParser } from "@/lib/messageParser";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 
@@ -26,7 +26,7 @@ const formatToolOutput = (output: unknown): string => {
 const formatTerminalOutput = (
 	tool: string,
 	input: unknown,
-	output: unknown,
+	output: unknown
 ) => {
 	const terminalHtml = `<div class="bg-[#1e1e1e] text-white font-mono p-2 rounded-md my-2 overflow-x-auto whitespace-normal max-w-[600px]">
       <div class="flex items-center gap-1.5 border-b border-gray-700 pb-1">
@@ -37,11 +37,11 @@ const formatTerminalOutput = (
       </div>
       <div class="text-gray-400 mt-1">$ Input</div>
       <pre class="text-yellow-400 mt-0.5 whitespace-pre-wrap overflow-x-auto">${formatToolOutput(
-				input,
+				input
 			)}</pre>
       <div class="text-gray-400 mt-2">$ Output</div>
       <pre class="text-green-400 mt-0.5 whitespace-pre-wrap overflow-x-auto">${formatToolOutput(
-				output,
+				output
 			)}</pre>
     </div>`;
 
@@ -63,7 +63,7 @@ const Page = () => {
 
 	const processStream = async (
 		reader: ReadableStreamDefaultReader<Uint8Array>,
-		onChunk: (chunk: string) => Promise<void>,
+		onChunk: (chunk: string) => Promise<void>
 	) => {
 		try {
 			while (true) {
@@ -140,7 +140,7 @@ const Page = () => {
 								fullResponse += formatTerminalOutput(
 									msg.tool,
 									msg.input,
-									"processing...",
+									"processing..."
 								);
 
 								setStreamResponse(fullResponse);
@@ -149,7 +149,7 @@ const Page = () => {
 						case IStreamMessageType.ToolEnd:
 							if ("tool" in msg && currentTool) {
 								const lastTerminalIndex = fullResponse.lastIndexOf(
-									"<div class='bg-[#1e1e1e]'",
+									"<div class='bg-[#1e1e1e]'"
 								);
 
 								if (lastTerminalIndex !== -1) {
@@ -205,7 +205,7 @@ const Page = () => {
 				content: formatTerminalOutput(
 					"error",
 					"Failed to process message",
-					error instanceof Error ? error.message : "Unknown error",
+					error instanceof Error ? error.message : "Unknown error"
 				),
 				userAvatarLink: "",
 				role: "AI",
@@ -227,72 +227,78 @@ const Page = () => {
 		}
 	}, [messages]);
 
-	console.log(streamResponse);
+	const haveMessages = useMemo(() => {
+		return messages.length > 0;
+	}, [messages]);
+
 	return (
-		<div className="flex flex-col relative h-[calc(100vh-theme(spacing.14))] w-full px-2">
-			<div className="flex-1 gap-2 flex flex-col overflow-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-				{messages.map((_message) => {
-					return <Message key={_message._id} {..._message} />;
-				})}
-				{eventData && <Todo data={eventData.arguments} />}
-				{streamResponse && (
-					<Message
-						key={uuidv4()}
-						{...{
-							content: streamResponse,
-							userAvatarLink: "",
-							role: "AI",
-							_id: `temp_assitants_${uuidv4()}`,
-							createdAt: Date.now(),
-							type: "VALID",
-						}}
-					/>
-				)}
-				{error && (
-					<Message
-						{...{
-							content: streamResponse,
-							userAvatarLink: "",
-							role: "AI",
-							_id: `temp_assitants_${Date.now()}`,
-							createdAt: Date.now(),
-							type: "ERROR",
-						}}
-					/>
-				)}
-				{question && (
-					<Message
-						{...{
-							content: question,
-							userAvatarLink: "",
-							role: "AI",
-							_id: `temp_assitants_${Date.now()}`,
-							createdAt: Date.now(),
-							type: "QUESTION",
-						}}
-					/>
-				)}
-				{isLoading && !streamResponse && (
-					<div className="flex justify-end animate-in fade-in-0">
-						<div className="rounded-2xl px-4 py-3 bg-white text-gray-900 rounded-bl-none shadow-sm ring-1 ring-inset ring-gray-200">
-							<div className="flex items-center gap-1.5">
-								{[0.3, 0.15, 0].map((delay, i) => (
-									<div
-										key={i}
-										className="h-1.5 w-1.5 rounded-full bg-gray-400 animate-bounce"
-										style={{ animationDelay: `-${delay}s` }}
-									/>
-								))}
+		<div className="flex flex-col relative w-full h-full px-2 justify-center">
+			{(haveMessages || streamResponse || error) && (
+				<div className="flex-1 gap-2 flex flex-col overflow-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+					{messages.map((_message) => {
+						return <Message key={_message._id} {..._message} />;
+					})}
+					{eventData && <Todo data={eventData.arguments} />}
+					{streamResponse && (
+						<Message
+							key={uuidv4()}
+							{...{
+								content: streamResponse,
+								userAvatarLink: "",
+								role: "AI",
+								_id: `temp_assitants_${uuidv4()}`,
+								createdAt: Date.now(),
+								type: "VALID",
+							}}
+						/>
+					)}
+					{error && (
+						<Message
+							{...{
+								content: streamResponse,
+								userAvatarLink: "",
+								role: "AI",
+								_id: `temp_assitants_${Date.now()}`,
+								createdAt: Date.now(),
+								type: "ERROR",
+							}}
+						/>
+					)}
+					{question && (
+						<Message
+							{...{
+								content: question,
+								userAvatarLink: "",
+								role: "AI",
+								_id: `temp_assitants_${Date.now()}`,
+								createdAt: Date.now(),
+								type: "QUESTION",
+							}}
+						/>
+					)}
+					{isLoading && !streamResponse && (
+						<div className="flex justify-end animate-in fade-in-0">
+							<div className="rounded-2xl px-4 py-3 bg-white text-gray-900 rounded-bl-none shadow-sm ring-1 ring-inset ring-gray-200">
+								<div className="flex items-center gap-1.5">
+									{[0.3, 0.15, 0].map((delay, i) => (
+										<div
+											key={i}
+											className="h-1.5 w-1.5 rounded-full bg-gray-400 animate-bounce"
+											style={{ animationDelay: `-${delay}s` }}
+										/>
+									))}
+								</div>
 							</div>
 						</div>
-					</div>
-				)}
-				<div ref={messageRef} />
+					)}
+					<div ref={messageRef} />
+				</div>
+			)}
+			<div className="h-5" />
+			<div className="absolute bottom-10 contents flex-1 w-full mb-2">
+				<ChatInterface haveMessages={haveMessages} chatAction={chatAction} />
 			</div>
-			<div className="h-15" />
-			<div className="absolute bottom-0 contents flex-1 w-full">
-				<ChatInterface chatAction={chatAction} />
-			</div>
+			<div className="h-5" />
 		</div>
 	);
 };

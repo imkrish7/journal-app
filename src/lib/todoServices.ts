@@ -13,12 +13,13 @@ export const fetchTodos = async <T>(): Promise<IHttpServiceResponse<T>> => {
 			},
 		});
 
-		return { error: null, data: response };
+		return { error: false, data: response, success: true };
 	} catch (error) {
 		console.error(error);
 		return {
 			data: null,
-			error,
+			error: true,
+			success: false,
 		};
 	}
 };

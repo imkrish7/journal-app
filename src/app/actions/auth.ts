@@ -5,12 +5,12 @@ import { cookies } from "next/headers";
 import { z } from "zod";
 
 export async function loginAction(
-	userCredentials: z.infer<typeof loginSchema>,
+	userCredentials: z.infer<typeof loginSchema>
 ) {
 	const { username, password } = userCredentials;
 
 	try {
-		const response = await fetch("http://localhost:8000/auth/login", {
+		const response = await fetch(`${process.env.API_ENDPOINT}/auth/login`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
