@@ -1,41 +1,22 @@
-import { Button } from "@/components/ui/button";
-import { fullLogoFont } from "@/fonts";
-import Link from "next/link";
-import React, { FC, ReactNode } from "react";
+"use client";
+import { FC, ReactNode, useState } from "react";
+import Navbar from "./_layout/nav-bar";
 
 interface IProps {
 	children: ReactNode;
 }
 
-const layout: FC<IProps> = ({ children }) => {
+const Layout: FC<IProps> = ({ children }) => {
+	const [view, setView] = useState<"landing" | "app" | "login" | "signup">(
+		"landing"
+	);
 	return (
-		<div className="relative w-full bg-public flex flex-col min-h-screen">
-			<header className="w-full fixed top-2 flex justify-center z-10">
-				<div className="px-4 ring-2 ring-white w-[90%] md:w-2xl lg:w-7xl backdrop-blur-md bg-gray-200/60 rounded-[100px] h-[60px] flex shrink-0 items-center">
-					<Link href={"/"}>
-						<div className="text-2xl cursor-pointer">
-							<span className={`${fullLogoFont.className}`}>journal</span>
-						</div>
-					</Link>
-
-					<div className="flex flex-1 justify-end">
-						<div className="flex gap-2">
-							<Link href={"/login"}>
-								<Button variant={"outline"} className="ring-1 ring-gray-100">
-									Login
-								</Button>
-							</Link>
-							<Link href={"/signup"}>
-								<Button>Signup</Button>
-							</Link>
-						</div>
-					</div>
-				</div>
-			</header>
+		<div className="relative w-full flex flex-col min-h-screen">
+			<Navbar onNavigate={(v) => setView(v)} currentPage={view} />
 
 			<main className="min-h-screen relative w-full">{children}</main>
 		</div>
 	);
 };
 
-export default layout;
+export default Layout;

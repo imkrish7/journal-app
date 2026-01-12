@@ -167,3 +167,9 @@
 		hsla(288, 100%, 81%, 1) 100%
 	);
 }
+
+.glass {
+	background: rgba(255, 255, 255, 0.7);
+	backdrop-filter: blur(12px);
+	border: 1px solid rgba(255, 255, 255, 0.3);
+}

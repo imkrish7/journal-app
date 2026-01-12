@@ -21,7 +21,6 @@ import TrashLottie from "@/components/icons/TrashLottie";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { logoFont } from "@/fonts";
 import HomeLottie from "@/components/icons/HomeLottie";
 
 // This is sample data
@@ -96,12 +95,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 							<Link href="/dashboard">
 								<div
 									className={`text-sidebar-secondary flex aspect-square ${
-										state === "collapsed" ? "size-10" : "p-2"
-									} items-center justify-center rounded-lg`}
+										state === "collapsed" ? "h-8 w-8" : "gap-3"
+									} items-center justify-center`}
 								>
-									<span className={`font-bold text-2xl ${logoFont.className}`}>
-										j{state === "expanded" && <span>ournal</span>}
-									</span>
+									<div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+										<i className="fa-solid fa-feather-pointed text-white text-sm"></i>
+									</div>
+									{state === "expanded" && (
+										<span className="text-2xl font-serif font-bold italic tracking-tight text-slate-800">
+											Aura
+										</span>
+									)}
 								</div>
 							</Link>
 						</SidebarMenuButton>

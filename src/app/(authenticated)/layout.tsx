@@ -16,11 +16,11 @@ interface IProps {
 
 export default function Page({ children }: IProps) {
 	return (
-		<div className="w-full min-h-screen bg-public backdrop-blur-3xl">
+		<div className="w-full min-h-screen bg-slate-50 backdrop-blur-3xl">
 			<SidebarProvider
 				style={
 					{
-						"--sidebar-width-icon": "3rem",
+						"--sidebar-width-icon": "3.5rem",
 					} as CSSProperties
 				}
 			>
