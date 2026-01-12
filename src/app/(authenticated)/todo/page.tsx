@@ -1,11 +1,10 @@
+export const dynamic = "force-dynamic";
 import Todo from "@/components/Todo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FilterIcon, PlusIcon } from "lucide-react";
 import { ITodo } from "@/interface/todo";
 import { fetchTodos } from "@/lib/todoServices";
-
-export const dynamic = "force-dynamic";
 
 const page = async () => {
 	const { data: todos, error } = await fetchTodos<ITodo[]>();
