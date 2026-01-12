@@ -9,7 +9,7 @@ interface IProps {
 }
 
 const ChatInterface: FC<IProps> = ({ chatAction, haveMessages = false }) => {
-	const [message, setMessage] = useState<string>();
+	const [message, setMessage] = useState<string>("");
 
 	const sendMessage = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -17,8 +17,6 @@ const ChatInterface: FC<IProps> = ({ chatAction, haveMessages = false }) => {
 			await chatAction(message);
 		}
 	};
-
-	console.log(haveMessages);
 
 	return (
 		<div className={`flex w-full justify-center`}>

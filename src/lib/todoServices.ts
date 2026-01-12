@@ -1,3 +1,4 @@
+"use server";
 import { http } from "@/http-service/http";
 import { cookies } from "next/headers";
 import { IHttpServiceResponse } from "@/interface/http";
@@ -11,6 +12,7 @@ export const fetchTodos = async <T>(): Promise<IHttpServiceResponse<T>> => {
 				Accept: "application/json",
 				Cookie: cookieStore.toString(),
 			},
+			cache: "no-store",
 		});
 
 		return { error: false, data: response, success: true };
