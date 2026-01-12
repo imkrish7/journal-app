@@ -11,6 +11,8 @@ export const fetchTodos = async <T>(): Promise<IHttpServiceResponse<T>> => {
 				Accept: "application/json",
 				Cookie: cookieStore.toString(),
 			},
+			cache: "no-store",
+			credentials: "include",
 		});
 
 		return { error: false, data: response, success: true };

@@ -5,6 +5,8 @@ import { FilterIcon, PlusIcon } from "lucide-react";
 import { ITodo } from "@/interface/todo";
 import { fetchTodos } from "@/lib/todoServices";
 
+export const dynamic = "force-dynamic";
+
 const page = async () => {
 	const { data: todos, error } = await fetchTodos<ITodo[]>();
 
