@@ -20,6 +20,7 @@ const CTA = () => {
 						>
 							Try Aura Free
 						</Link>
+						<div className="h-2" />
 						<p className="text-sm text-indigo-200">
 							No credit card required • 14-day free trial
 						</p>

@@ -46,7 +46,7 @@
 :root {
 	--inherit: inherit;
 	--radius: 0.625rem;
-	--background: oklch(1 0 0);
+	--background: #fcfcfc; /* background: oklch(1 0 0);*/
 	--foreground: oklch(0.141 0.005 285.823);
 	--card: oklch(1 0 0);
 	--card-foreground: oklch(0.141 0.005 285.823);
@@ -172,4 +172,33 @@
 	background: rgba(255, 255, 255, 0.7);
 	backdrop-filter: blur(12px);
 	border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+@keyframes loader-progress {
+	0% {
+		width: 0%;
+		transform: translateX(-100%);
+	}
+	50% {
+		width: 70%;
+		transform: translateX(0%);
+	}
+	100% {
+		width: 100%;
+		transform: translateX(100%);
+	}
+}
+.animate-loader-progress {
+	animation: loader-progress 3s infinite ease-in-out;
+}
+@keyframes spin-slow {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+.animate-spin-slow {
+	animation: spin-slow 12s linear infinite;
 }

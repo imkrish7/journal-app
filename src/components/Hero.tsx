@@ -39,7 +39,7 @@ const Hero = () => {
 					<div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
 						<Link
 							href="/login"
-							className="w-full sm:w-auto px-12 py-7 rounded-2xl shadow-2xl shadow-indigo-200"
+							className="w-full bg-indigo-500 font-bold text-slate-100 sm:w-auto px-12 py-7 rounded-2xl shadow-2xl shadow-indigo-200"
 						>
 							Start Your First Entry
 						</Link>

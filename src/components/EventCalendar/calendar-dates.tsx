@@ -1,6 +1,6 @@
 "use client";
 import { useCalendar } from "@/context/calendarContext";
-import React from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const CalenderDates = () => {
 	const calendar = useCalendar();
@@ -12,98 +12,62 @@ const CalenderDates = () => {
 	};
 	return (
 		<div className="col-span-12 xl:col-span-7 px-2.5 py-5 sm:p-8 bg-gradient-to-b from-white/25 to-white xl:bg-white rounded-2xl max-xl:row-start-1">
-			<div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-5">
-				<div className="flex items-center gap-4">
-					<h5 className="text-xl leading-8 font-semibold text-gray-900">
-						{`${calendar?.getMonth}`}
-					</h5>
-					<div className="flex items-center">
-						<button
-							onClick={() => calendar?.prevMonth()}
-							className="text-indigo-600 p-1 rounded transition-all duration-300 hover:text-white hover:bg-indigo-600"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="16"
-								height="16"
-								viewBox="0 0 16 16"
-								fill="none"
+			<div className="w-full md:w-[450px] shrink-0">
+				<div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-5">
+					<div className="flex w-full items-center justify-between mb-8 px-2">
+						<h2 className="text-2xl font-bold text-slate-900">
+							{calendar?.getMonth}
+						</h2>
+						<div className="flex items-center space-x-4">
+							<button
+								onClick={() => calendar?.prevMonth()}
+								className="p-2 text-indigo-400 hover:bg-indigo-50 rounded-full transition-colors"
 							>
-								<path
-									d="M10.0002 11.9999L6 7.99971L10.0025 3.99719"
-									stroke="currentcolor"
-									strokeWidth="1.3"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-								></path>
-							</svg>
-						</button>
-						<button
-							onClick={() => calendar?.nextMonth()}
-							className="text-indigo-600 p-1 rounded transition-all duration-300 hover:text-white hover:bg-indigo-600"
-						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="16"
-								height="16"
-								viewBox="0 0 16 16"
-								fill="none"
+								<ChevronLeft size={20} />
+							</button>
+							<button
+								onClick={() => calendar?.nextMonth()}
+								className="p-2 text-indigo-400 hover:bg-indigo-50 rounded-full transition-colors"
 							>
-								<path
-									d="M6.00236 3.99707L10.0025 7.99723L6 11.9998"
-									stroke="currentcolor"
-									strokeWidth="1.3"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-								></path>
-							</svg>
-						</button>
+								<ChevronRight size={20} />
+							</button>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div className="border border-indigo-200 rounded-xl">
-				<div className="grid grid-cols-7 rounded-t-3xl border-b border-indigo-200">
-					<div className="py-3.5 border-r rounded-tl-xl border-indigo-200 bg-indigo-50 flex items-center justify-center text-sm font-medium text-indigo-600">
-						Sun
-					</div>
-					<div className="py-3.5 border-r border-indigo-200 bg-indigo-50 flex items-center justify-center text-sm font-medium text-indigo-600">
-						Mon
-					</div>
-					<div className="py-3.5 border-r border-indigo-200 bg-indigo-50 flex items-center justify-center text-sm font-medium text-indigo-600">
-						Tue
-					</div>
-					<div className="py-3.5 border-r border-indigo-200 bg-indigo-50 flex items-center justify-center text-sm font-medium text-indigo-600">
-						Wed
-					</div>
-					<div className="py-3.5 border-r border-indigo-200 bg-indigo-50 flex items-center justify-center text-sm font-medium text-indigo-600">
-						Thu
-					</div>
-					<div className="py-3.5 border-r border-indigo-200 bg-indigo-50 flex items-center justify-center text-sm font-medium text-indigo-600">
-						Fri
-					</div>
-					<div className="py-3.5 rounded-tr-xl bg-indigo-50 flex items-center justify-center text-sm font-medium text-indigo-600">
-						Sat
-					</div>
-				</div>
-				<div className="grid grid-cols-7 rounded-b-xl">
-					{calendar?.getDays.map((date, index) => {
-						return (
-							<div
-								key={index}
-								className={`flex xl:aspect-square max-xl:min-h-[60px] p-3.5 border-r border-b border-indigo-200 transition-all duration-300 hover:bg-indigo-50 cursor-pointer`}
+
+				<div className="bg-white rounded-[40px] p-8 shadow-sm border border-slate-50 h-full">
+					<div className="grid grid-cols-7 text-center mb-4">
+						{["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+							<span
+								key={day}
+								className="text-sm font-semibold text-indigo-500 py-4 border-b border-indigo-50/50"
 							>
-								<span
-									className={`text-xs ${
-										today(date)
-											? "bg-indigo-500 rounded-full w-7 h-7 flex items-center justify-center text-gray-200"
-											: ""
-									} font-semibold text-gray-400`}
+								{day}
+							</span>
+						))}
+					</div>
+					<div className="grid grid-cols-7 rounded-b-xl">
+						{calendar?.getDays.map((date, index) => {
+							return (
+								<div
+									key={`day_${index}_${date.getDay()}`}
+									className={`h-16 flex items-center justify-center text-sm border border-slate-50/50 transition-all cursor-pointer hover:bg-indigo-50/30 ${
+										today(date) ? "text-white" : "text-slate-600"
+									}`}
 								>
-									{new Date(date).getDate()}
-								</span>
-							</div>
-						);
-					})}
+									<span
+										className={`w-10 h-10 flex items-center justify-center rounded-full ${
+											today(date)
+												? "bg-indigo-600 shadow-lg shadow-indigo-100"
+												: ""
+										}`}
+									>
+										{new Date(date).getDate()}
+									</span>
+								</div>
+							);
+						})}
+					</div>
 				</div>
 			</div>
 		</div>

@@ -1,6 +1,5 @@
 import React, { FC, useState } from "react";
 import { Button } from "./ui/button";
-import RobotLottie from "./icons/RobotLottie";
 import { Input } from "./ui/input";
 
 interface IProps {
@@ -22,14 +21,11 @@ const ChatInterface: FC<IProps> = ({ chatAction, haveMessages = false }) => {
 		<div className={`flex w-full justify-center`}>
 			<div
 				className={`flex flex-col  ${
-					haveMessages ? "w-full" : "min-w-3xl sm:max-w-4xl"
+					haveMessages ? "w-full" : "w-full sm:max-w-4xl"
 				}`}
 			>
 				{!haveMessages && (
 					<div className="flex flex-col justify-center items-center w-full">
-						<div className="h-60 w-90">
-							<RobotLottie />
-						</div>
 						<div className="text-center space-y-4 mb-12">
 							<h1 className="text-5xl font-serif font-bold text-slate-900 leading-tight">
 								Hi, I&apos;m Aura
@@ -40,11 +36,11 @@ const ChatInterface: FC<IProps> = ({ chatAction, haveMessages = false }) => {
 						</div>
 					</div>
 				)}
-				<div className="w-full max-w-2xl relative">
-					<div className="glass p-1 rounded-3xl shadow-xl shadow-slate-200/50 border border-white">
+				<div className="w-full relative">
+					<div className="glass p-1 rounded-3xl inset-shadow-sm shadow-xl shadow-slate-200/50 border border-white">
 						<form
 							onSubmit={sendMessage}
-							className="flex items-center gap-4 bg-white rounded-[1.4rem] p-4"
+							className="flex items-center gap-4 bg-white rounded-[1.4rem] p-4 w-full"
 						>
 							<Input
 								className="flex-1 bg-transparent border-none outline-none text-lg placeholder:text-slate-300 px-2 active:border-none focus-visible:ring-0"
