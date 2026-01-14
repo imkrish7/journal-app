@@ -1,27 +1,27 @@
+export enum Mood {
+	ECSTATIC = "Ecstatic",
+	HAPPY = "Happy",
+	NEUTRAL = "Neutral",
+	SAD = "Sad",
+	ANXIOUS = "Anxious",
+	CALM = "Calm",
+}
+
 export interface JournalEntry {
 	id: string;
-	date: string;
 	title: string;
 	content: string;
-	mood: string;
-	tags: string[];
-	image?: string;
-	aiInsight?: string;
-	aiSummary?: string;
+	mood: Mood;
+	createdAt: number;
+	aiAnalysis?: {
+		sentiment: string;
+		tags: string[];
+		summary: string;
+		suggestion: string;
+	};
 }
 
-export enum Mood {
-	JOY = "Joyful",
-	CALM = "Calm",
-	SAD = "Reflective",
-	ANXIOUS = "Restless",
-	ANGRY = "Intense",
-	TIRED = "Exhausted",
-}
-
-export interface AIInsightResponse {
-	summary: string;
-	moodAnalysis: string;
-	growthPrompt: string;
-	keyThemes: string[];
+export interface LiveTranscription {
+	role: "user" | "model";
+	text: string;
 }

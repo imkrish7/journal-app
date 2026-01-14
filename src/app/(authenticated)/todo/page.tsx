@@ -10,7 +10,7 @@ const page = async () => {
 	const { data: todos, error } = await fetchTodos<ITodo[]>();
 
 	return (
-		<div className="flex flex-col h-full md:max-w-5xl mx-auto space-y-10 animate-fade-in">
+		<div className="px-6 flex flex-col h-full w-ful space-y-10 animate-fade-in">
 			<header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
 				<div>
 					<h1 className="text-5xl font-serif font-bold text-slate-900 mb-2">
@@ -32,7 +32,7 @@ const page = async () => {
 					</Button>
 				</div>
 			</header>
-			<Card className=" border-none flex flex-col flex-1 w-full sm:min-w-xl md:min-w-5xl h-full overflow-hidden ">
+			<Card className=" bg-transparent border-none shadow-none flex flex-col flex-1 w-full sm:min-w-xl h-full overflow-hidden ">
 				<CardContent className="flex flex-col gap-2 overflow-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
 					<div className="flex flex-col flex-1 gap-2 ">
 						{error && <div>Failed to fetch todos</div>}
@@ -44,7 +44,7 @@ const page = async () => {
 					</div>
 				</CardContent>
 			</Card>
-			<div className="h-2" />
+			{/* <div className="h-2" /> */}
 		</div>
 	);
 };

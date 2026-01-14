@@ -26,7 +26,7 @@ const Footer = () => {
 						</a>
 					</div>
 					<p className="text-slate-400 text-sm">
-						© 2024 Aura Journal Inc. All rights reserved.
+						© 2026 Aura Journal Inc. All rights reserved.
 					</p>
 				</div>
 			</div>

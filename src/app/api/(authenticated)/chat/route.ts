@@ -14,17 +14,13 @@ export async function POST(req: NextRequest) {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
-			// Inject the cookies here
 			Cookie: allCookies,
-			// Also forward the Authorization header if you use Bearer tokens
 			Authorization: req.headers.get("Authorization") || "",
 		},
-		// Pass the stream directly to avoid "disturbed body" errors
 		body: req.body,
-		// Crucial: Tells Node not to buffer or cache the response
 		cache: "no-store",
-		// duplex: "half",
-	});
+		duplex: "half",
+	} as RequestInit);
 
 	console.log(response);
 

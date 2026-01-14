@@ -13,72 +13,24 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/ui/sidebar";
-import MemoryLottie from "@/components/icons/MemoryLottie";
-import TodoLottie from "@/components/icons/TodoLottie";
-import ReminderLottie from "@/components/icons/ReminderLottie";
-import TrashLottie from "@/components/icons/TrashLottie";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { data } from "@/lib/nav-utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import HomeLottie from "@/components/icons/HomeLottie";
-
-// This is sample data
-const data = {
-	user: {
-		name: "shadcn",
-		email: "m@example.com",
-		avatar:
-			"https://images.pexels.com/photos/9558782/pexels-photo-9558782.jpeg",
-	},
-	navMain: [
-		{
-			title: "Dashboard",
-			url: "/dashboard",
-			icon: HomeLottie,
-			isActive: true,
-			background: "#8238e830",
-			textColor: "#8238e8",
-		},
-		{
-			title: "Todoist",
-			url: "/todo",
-			icon: TodoLottie,
-			isActive: true,
-			background: "#56425230",
-			textColor: "#565252",
-		},
-		{
-			title: "Memory",
-			url: "/memory",
-			icon: MemoryLottie,
-			isActive: false,
-			background: "#5569cc30",
-			textColor: "#5569cc",
-		},
-		{
-			title: "Reminders",
-			url: "/reminders",
-			icon: ReminderLottie,
-			isActive: false,
-			background: "#fa333330",
-			textColor: "#fa3333",
-		},
-		{
-			title: "Trash",
-			url: "/trash",
-			icon: TrashLottie,
-			isActive: false,
-			background: "#fa333330",
-			textColor: "#fa3333",
-		},
-	],
-};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const router = useRouter();
+	const pathname = usePathname();
 	const { state } = useSidebar();
 	const isMobile = useIsMobile();
+
+	const isActive = React.useCallback(
+		(path: string) => {
+			return pathname === path;
+		},
+		[pathname]
+	);
 
 	return (
 		<Sidebar
@@ -90,9 +42,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		>
 			<SidebarHeader>
 				<SidebarMenu>
-					<SidebarMenuItem>
-						<SidebarMenuButton size="lg" asChild className="md:h-10 md:p-0">
-							<Link href="/dashboard">
+					<SidebarMenuItem className="flex justify-center">
+						<SidebarMenuButton size="lg" asChild className={`md:h-10 md:p-0`}>
+							<Link href="/dashboard" className="">
 								<div
 									className={`text-sidebar-secondary flex aspect-square ${
 										state === "collapsed" ? "h-8 w-8" : "gap-3"
@@ -101,7 +53,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 									<div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
 										<i className="fa-solid fa-feather-pointed text-white text-sm"></i>
 									</div>
-									{state === "expanded" && (
+									{(state === "expanded" || isMobile) && (
 										<span className="text-2xl font-serif font-bold italic tracking-tight text-slate-800">
 											Aura
 										</span>
@@ -115,34 +67,38 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			<SidebarContent>
 				<SidebarGroup>
 					<SidebarMenu>
-						{data.navMain.map((item) => (
-							<SidebarMenuItem key={item.title}>
-								<SidebarMenuButton
+						{data.navMain.map((item) => {
+							return (
+								<button
+									key={item.title}
 									onClick={() => {
 										router.push(item.url);
 									}}
-									tooltip={item.title}
-									style={{
-										backgroundColor: item.background,
-									}}
-									className={`group-data-[collapsible=icon]:p-0! mt-2`}
+									className={`w-full cursor-pointer flex items-center justify-between ${
+										state === "expanded"
+											? "p-3 rounded-2xl "
+											: "p-1 rounded-lg "
+									} transition-all group ${
+										isActive(item.url)
+											? `${item.background} ${item.textColor} font-semibold`
+											: "text-slate-500 hover:bg-slate-50"
+									}`}
 								>
-									<div className={`w-8 h-8`}>
-										<item.icon />
-									</div>
-									{(state === "expanded" || isMobile) && (
-										<span
-											style={{
-												color: item.textColor,
-											}}
-											className={`font-bold`}
+									<div className="flex items-center space-x-3">
+										<div
+											className={`p-2 rounded-lg transition-colors ${
+												isActive(item.url)
+													? `${item.background} ${item.textColor}`
+													: "bg-slate-100 hover:bg-slate-200"
+											}`}
 										>
-											{item.title}
-										</span>
-									)}
-								</SidebarMenuButton>
-							</SidebarMenuItem>
-						))}
+											<item.icon size={18} />
+										</div>
+										{state === "expanded" && <span>{item.title}</span>}
+									</div>
+								</button>
+							);
+						})}
 					</SidebarMenu>
 				</SidebarGroup>
 			</SidebarContent>
