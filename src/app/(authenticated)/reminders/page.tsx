@@ -1,10 +1,12 @@
-import EventCalender from "@/components/EventCalendar/EventCalender";
-import React from "react";
+import CalendarProvider from "@/providers/calender-provider";
+import EventCalender from "./components/CalendarAndEvent";
 
-const page = () => {
+const page = async () => {
 	return (
 		<div className="w-full h-full overflow-y-auto">
-			<EventCalender />
+			<CalendarProvider>
+				<EventCalender />
+			</CalendarProvider>
 		</div>
 	);
 };

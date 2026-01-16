@@ -1,6 +1,6 @@
 "use client";
 import { useCalendar } from "@/context/calendarContext";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 
 const CalenderDates = () => {
 	const calendar = useCalendar();
@@ -70,6 +70,13 @@ const CalenderDates = () => {
 					</div>
 				</div>
 			</div>
+			<button
+				onClick={calendar?.addNewEvent}
+				className="mt-2 w-full p-8 border-2 border-dashed border-gray-100 rounded-[40px] text-gray-300 hover:border-indigo-200 hover:text-indigo-400 hover:bg-indigo-50/30 transition-all flex items-center justify-center gap-3 font-bold"
+			>
+				<Plus className="w-6 h-6" />
+				Add Event to Schedule
+			</button>
 		</div>
 	);
 };

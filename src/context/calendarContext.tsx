@@ -8,6 +8,8 @@ export interface ICalendar {
 	getDays: Date[];
 	getMonth: string;
 	todayDate: Date;
+	addNewEvent: () => void;
+	newEventForm: boolean;
 }
 
 export const CalendarContext = createContext<ICalendar | null>(null);

@@ -1,6 +1,9 @@
-import React, { FC } from "react";
+import React, { FC, useCallback } from "react";
 import RobotLottie from "./icons/RobotLottie";
 import { Avatar, AvatarImage } from "./ui/avatar";
+import { IEvent } from "@/interface/todo";
+import Link from "next/link";
+import Todo from "./Todo";
 
 interface IProps {
 	_id: string;
@@ -9,19 +12,39 @@ interface IProps {
 	createdAt: number;
 	userAvatarLink: string | undefined;
 	type: "ERROR" | "VALID" | "QUESTION" | string;
+	event: IEvent | null;
 }
 
 const formatMessage = (content: string): string => {
 	content = content.replace(/\\\\/g, "\\");
-
 	content = content.replace(/\\n/g, "\n");
-
 	content = content.replace(/---START---\n?/g, "").replace(/\n?---END---/g, "");
-
 	return content.trim();
 };
 
-const Message: FC<IProps> = ({ role, userAvatarLink, content, type }) => {
+const Message: FC<IProps> = ({
+	role,
+	userAvatarLink,
+	content,
+	type,
+	event,
+}) => {
+	const getEvent = useCallback(() => {
+		if (event) {
+			switch (event.name) {
+				case "create_todo": {
+					return (
+						<Link href={`/todo/${event.arguments.id}`}>
+							<Todo data={event.arguments} />
+						</Link>
+					);
+				}
+				default: {
+					return "";
+				}
+			}
+		}
+	}, [event]);
 	return (
 		<div
 			className={`flex flex-col items-end ${
@@ -61,6 +84,7 @@ const Message: FC<IProps> = ({ role, userAvatarLink, content, type }) => {
 								}`}
 							>
 								{content}
+								{event && getEvent()}
 							</span>
 						)}
 

@@ -92,7 +92,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 													: "bg-slate-100 hover:bg-slate-200"
 											}`}
 										>
-											<item.icon size={18} />
+											{item.icon.component ? (
+												<item.icon.component size={18} />
+											) : (
+												<i className={item.icon.tag} />
+											)}
 										</div>
 										{state === "expanded" && <span>{item.title}</span>}
 									</div>

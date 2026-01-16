@@ -1,10 +1,4 @@
-import {
-	Bell,
-	Brain,
-	CheckSquare,
-	LayoutDashboard,
-	Trash2,
-} from "lucide-react";
+import { Brain, CheckSquare, LayoutDashboard, Trash2 } from "lucide-react";
 export const data = {
 	user: {
 		name: "shadcn",
@@ -16,7 +10,7 @@ export const data = {
 		{
 			title: "Dashboard",
 			url: "/dashboard",
-			icon: LayoutDashboard,
+			icon: { component: LayoutDashboard, tag: null },
 			isActive: true,
 			background: "bg-purple-100",
 			textColor: "text-purple-600",
@@ -24,7 +18,7 @@ export const data = {
 		{
 			title: "Todoist",
 			url: "/todo",
-			icon: CheckSquare,
+			icon: { component: CheckSquare, tag: null },
 			isActive: true,
 			background: "bg-slate-100 ",
 			textColor: "text-slate-600",
@@ -32,15 +26,18 @@ export const data = {
 		{
 			title: "Memory",
 			url: "/memory",
-			icon: Brain,
+			icon: { component: Brain, tag: null },
 			isActive: false,
 			background: "bg-blue-100",
 			textColor: "text-blue-600",
 		},
 		{
-			title: "Reminders",
+			title: "Events",
 			url: "/reminders",
-			icon: Bell,
+			icon: {
+				component: null,
+				tag: "fa-solid fa-calendar-day",
+			},
 			isActive: false,
 			background: "bg-amber-50",
 			textColor: "text-amber-500",
@@ -48,7 +45,7 @@ export const data = {
 		{
 			title: "Trash",
 			url: "/trash",
-			icon: Trash2,
+			icon: { component: Trash2, tag: null },
 			isActive: false,
 			background: "bg-red-50",
 			textColor: "text-red-500",

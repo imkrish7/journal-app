@@ -36,6 +36,7 @@ const months = [
 ];
 
 const CalendarProvider: FC<IProps> = ({ children }) => {
+	const [addNewEvent, setAddNewEvent] = useState<boolean>(false);
 	const [currentDate, setCurrentDate] = useState<Date>(new Date());
 	const [todayDate] = useState<Date>(new Date());
 	const nextMonth = () => {
@@ -65,6 +66,10 @@ const CalendarProvider: FC<IProps> = ({ children }) => {
 		return months[currentDate.getMonth()];
 	}, [currentDate]);
 
+	const handleNewEvent = () => {
+		setAddNewEvent((prev) => !prev);
+	};
+
 	return (
 		<CalendarContext.Provider
 			value={{
@@ -74,6 +79,8 @@ const CalendarProvider: FC<IProps> = ({ children }) => {
 				getDays,
 				getMonth: getMonthName,
 				todayDate,
+				addNewEvent: handleNewEvent,
+				newEventForm: addNewEvent,
 			}}
 		>
 			{children}
