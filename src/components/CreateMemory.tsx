@@ -51,10 +51,6 @@ const CreateMemory = () => {
 
 		try {
 			if (entry.content.length > 20) {
-				// const insights = await analyzeJournalEntry(entry.content, entry.title);
-				// updatedEntry.aiInsight = insights.growthPrompt;
-				// updatedEntry.aiSummary = insights.summary;
-				// updatedEntry.tags = insights.keyThemes;
 			}
 		} catch (e) {
 			console.error(e);

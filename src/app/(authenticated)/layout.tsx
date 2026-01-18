@@ -9,6 +9,7 @@ import {
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
 import Loading from "./loading";
+import { useIsMobile } from "@/hooks/use-mobile";
 // import { ThemeToggle } from "@/components/theme-option";
 
 interface IProps {
@@ -16,19 +17,22 @@ interface IProps {
 }
 
 export default function Page({ children }: IProps) {
+	const isMobile = useIsMobile();
+	console.log(isMobile);
 	return (
 		<div className="w-full min-h-screen backdrop-blur-3xl">
 			<SidebarProvider
 				style={
 					{
 						"--sidebar-width-icon": "3.5rem",
+						"--sidebar-width": "3.5rem",
 					} as CSSProperties
 				}
 			>
 				<AppSidebar />
 				<SidebarInset className="relative bg-transparent h-screen">
-					<header className="[x-2 sticky top-0 flex shrink-0 items-center justify-between gap-2 z-10">
-						<SidebarTrigger />
+					<header className=" sticky top-0 flex shrink-0 items-center justify-between gap-2 z-10">
+						{isMobile && <SidebarTrigger />}
 						{/* <ThemeToggle /> */}
 					</header>
 					<div className="flex flex-1 flex-col gap-4 z-1 w-full h-[calc(100vh-theme(spacing.14))] overflow-y-auto overflow-x-hidden">

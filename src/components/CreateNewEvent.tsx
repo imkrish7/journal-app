@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-	X,
 	Sparkles,
 	Calendar,
 	Clock,
@@ -16,26 +15,16 @@ import {
 	DialogTitle,
 	DialogFooter,
 } from "./ui/dialog";
+import { useCalendar } from "@/context/calendarContext";
 
-interface NewEventModalProps {
-	isOpen: boolean;
-	onClose: () => void;
-	// onSave: (event: CalendarEvent) => void;
-}
-
-export const NewEvent: React.FC<NewEventModalProps> = ({
-	isOpen,
-	onClose,
-	// onSave,
-}) => {
+export const NewEvent = () => {
+	const calenderWidget = useCalendar();
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 	const [date, setDate] = useState("");
 	const [startTime, setStartTime] = useState("");
 	const [endTime, setEndTime] = useState("");
 	const [isRefining, setIsRefining] = useState(false);
-
-	if (!isOpen) return null;
 
 	const handleRefine = async () => {
 		if (!title) return;
@@ -66,11 +55,14 @@ export const NewEvent: React.FC<NewEventModalProps> = ({
 		};
 		// onSave(newEvent);
 		console.log(newEvent);
-		onClose();
+		calenderWidget?.addNewEvent();
 	};
 
 	return (
-		<Dialog open={isOpen} onOpenChange={onClose}>
+		<Dialog
+			open={calenderWidget?.newEventForm}
+			onOpenChange={calenderWidget?.addNewEvent}
+		>
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>
@@ -161,7 +153,7 @@ export const NewEvent: React.FC<NewEventModalProps> = ({
 						<div className="pt-4 flex justify-end gap-4">
 							<button
 								type="button"
-								onClick={onClose}
+								onClick={calenderWidget?.addNewEvent}
 								className="px-8 py-4 text-sm font-bold text-gray-400 hover:text-gray-600 transition-colors"
 							>
 								Cancel

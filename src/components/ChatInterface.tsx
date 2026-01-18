@@ -26,8 +26,13 @@ const ChatInterface: FC<IProps> = ({ chatAction, haveMessages = false }) => {
 			>
 				{!haveMessages && (
 					<div className="flex flex-col justify-center items-center w-full">
+						<div className="relative z-10 w-20 h-20 bg-white rounded-[28px] shadow-2xl shadow-indigo-100 flex items-center justify-center border border-gray-50">
+							<div className="bg-indigo-600 p-3 rounded-xl transform transition-transform group-hover:scale-110">
+								<i className="fa-solid fa-feather-pointed text-white text-4xl animate-pulse"></i>
+							</div>
+						</div>
 						<div className="text-center space-y-4 mb-12">
-							<h1 className="text-5xl font-serif font-bold text-slate-900 leading-tight">
+							<h1 className="text-8xl font-serif font-bold text-slate-900 leading-tight">
 								Hi, I&apos;m Aura
 							</h1>
 							<p className="text-3xl font-serif text-slate-800">

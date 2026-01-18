@@ -1,5 +1,5 @@
 import { CheckCircle2 } from "lucide-react";
-import { Card, CardContent } from "./ui/card";
+import { Card, CardContent } from "../../../../components/ui/card";
 import Todo from "@/components/Todo";
 import { fetchTodos } from "@/lib/todoServices";
 import { ITodo } from "@/interface/todo";

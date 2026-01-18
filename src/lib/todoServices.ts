@@ -2,6 +2,8 @@
 import { http } from "@/http-service/http";
 import { cookies } from "next/headers";
 import { IHttpServiceResponse } from "@/interface/http";
+import { HttpError } from "@/http-service/http-error";
+import { redirect } from "next/navigation";
 
 export const fetchTodos = async <T>(): Promise<IHttpServiceResponse<T>> => {
 	try {
@@ -17,7 +19,12 @@ export const fetchTodos = async <T>(): Promise<IHttpServiceResponse<T>> => {
 
 		return { error: false, data: response, success: true };
 	} catch (error) {
-		console.error(error);
+		if (error instanceof HttpError) {
+			console.log(error);
+			if (error.statusCode === 401) {
+				redirect("/login");
+			}
+		}
 		return {
 			data: null,
 			error: true,

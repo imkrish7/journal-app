@@ -1,16 +1,14 @@
 "use client";
 import { NewTaskModal } from "@/components/CreateNewTask";
 import { Button } from "@/components/ui/button";
-import { FC, ReactNode, useState } from "react";
+import { useTodoWidget } from "@/context/todoContext";
+import { FC, ReactNode } from "react";
 
 interface IProps {
 	children: ReactNode;
 }
 const TodoPage: FC<IProps> = ({ children }) => {
-	const [isOpen, setIsOpen] = useState<boolean>(false);
-	const handleOpenChange = () => {
-		setIsOpen((prev) => !prev);
-	};
+	const todoWidget = useTodoWidget();
 	return (
 		<div className="px-6 relative flex flex-col h-full w-full space-y-10 animate-fade-in">
 			<header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -24,7 +22,7 @@ const TodoPage: FC<IProps> = ({ children }) => {
 				</div>
 				<div className="flex items-center gap-3">
 					<Button
-						onClick={handleOpenChange}
+						onClick={todoWidget?.toggleTodoWidget}
 						className="rounded-2xl bg-indigo-600 shadow-lg shadow-indigo-100 flex items-center gap-2 px-6"
 					>
 						<i className="fa-solid fa-plus"></i> New Task
@@ -38,7 +36,12 @@ const TodoPage: FC<IProps> = ({ children }) => {
 				</div>
 			</header>
 			{children}
-			<NewTaskModal isOpen={isOpen} onClose={handleOpenChange} />
+			{todoWidget?.isWidgetOpen && (
+				<NewTaskModal
+					isOpen={todoWidget.isWidgetOpen}
+					handleClose={todoWidget.toggleTodoWidget}
+				/>
+			)}
 		</div>
 	);
 };
