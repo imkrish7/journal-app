@@ -17,8 +17,7 @@ import {
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { data } from "@/lib/nav-utils";
-// import { useIsMobile } from "@/hooks/use-mobile";
+import { data } from "@/lib/navUtils";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const router = useRouter();

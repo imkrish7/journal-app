@@ -20,8 +20,8 @@ import { FC, useActionState, useEffect, useState } from "react";
 import { createTodoAction } from "@/app/actions/todo";
 import { ActionState } from "@/interface/actions";
 import { todoSchema } from "@/schema/todo";
-import z from "zod";
 import { toast } from "sonner";
+import { getErrors } from "@/lib/formErrorUtiles";
 
 interface IProps {
 	isOpen: boolean;
@@ -76,16 +76,6 @@ export const NewTaskModal: FC<IProps> = ({ isOpen, handleClose }) => {
 		setSubtasks(subtasks.map((s) => (s.id === id ? { ...s, title: text } : s)));
 	};
 
-	const getErrors = (name: keyof z.infer<typeof todoSchema>) => {
-		if (state.errors && Array.isArray(state.errors)) {
-			return state.errors.join();
-		} else if (state.errors) {
-			return state.errors[name];
-		} else {
-			return "Uknown error";
-		}
-	};
-
 	useEffect(() => {
 		if (state.errors) {
 			toast.error("Failed to create task");
@@ -132,7 +122,7 @@ export const NewTaskModal: FC<IProps> = ({ isOpen, handleClose }) => {
 						/>
 						{state.errors && (
 							<div className="text-sm text-red-500 font-semibold">
-								{getErrors("task")}
+								{getErrors("task", state)}
 							</div>
 						)}
 					</div>
@@ -149,7 +139,7 @@ export const NewTaskModal: FC<IProps> = ({ isOpen, handleClose }) => {
 						/>
 						{state.errors && (
 							<div className="text-sm text-red-500 font-semibold">
-								{getErrors("description")}
+								{getErrors("description", state)}
 							</div>
 						)}
 					</div>
