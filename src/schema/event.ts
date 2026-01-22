@@ -9,7 +9,8 @@ export const eventSchema = z
 		date: z.coerce.date().refine(
 			(val) => {
 				const currentDate = new Date();
-				return val >= currentDate;
+				console.log(val.toDateString(), currentDate);
+				return val.getTime() >= currentDate.getTime();
 			},
 			{
 				message: "You can't create events to past dates",
@@ -22,12 +23,15 @@ export const eventSchema = z
 	.superRefine((val, ctx) => {
 		const userDate = new Date(val.date).getDate();
 		const currentDate = new Date().getDate();
+		const startTimeHour = parseInt(val.startTime.split(":")[0]);
+		const startTimeMinute = parseInt(val.startTime.split(":")[1]);
 
 		if (currentDate === userDate) {
 			const currentHours = new Date().getTime();
-			const currentMinutes = new Date().getMinutes();
-
-			if (`${currentHours}:${currentMinutes}` > val.startTime) {
+			const currentMinute = new Date().getMinutes();
+			if (
+				!(currentHours >= startTimeHour && currentMinute >= startTimeMinute - 1)
+			) {
 				ctx.addIssue({
 					code: "custom",
 					message: "An Event should not start in past ",
@@ -41,25 +45,6 @@ export const eventSchema = z
 				ctx.addIssue({
 					code: "custom",
 					message: "Endtime should be in future",
-					input: val.endTime,
-					inclusive: true,
-					path: ["endTime"],
-				});
-			}
-		} else if (currentDate < userDate) {
-			const startTimeHour = parseInt(val.startTime.split(":")[0]);
-			const startTimeMinute = parseInt(val.startTime.split(":")[1]);
-			const endTimeHour = parseInt(val.endTime.split(":")[0]);
-			const endTimeMinute = parseInt(val.endTime.split(":")[1]);
-
-			if (
-				!(startTimeHour > 12 && startTimeHour > endTimeHour) ||
-				(!(startTimeHour < 12 && endTimeHour > 12) &&
-					!(endTimeMinute + startTimeMinute === 60))
-			) {
-				ctx.addIssue({
-					code: "custom",
-					message: "End time is invalid",
 					input: val.endTime,
 					inclusive: true,
 					path: ["endTime"],

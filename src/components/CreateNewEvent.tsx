@@ -1,5 +1,5 @@
 "use client";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useMemo, useState } from "react";
 import { Calendar, Clock, CheckCircle2, Plus } from "lucide-react";
 
 import {
@@ -15,8 +15,18 @@ import { ActionState } from "@/interface/actions";
 import { eventSchema } from "@/schema/event";
 import { toast } from "sonner";
 import { getErrors } from "@/lib/formErrorUtiles";
+import moment from "moment";
+import { getTimeLeft } from "@/lib/newEventUtils";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
+import { SelectValue } from "@radix-ui/react-select";
 
 export const NewEvent = () => {
+	const today = moment().format("YYYY-MM-DD");
+	const [startDate, setStartDate] = useState<string>(new Date().toDateString());
+	const [endDate, setEndDate] = useState<string>(new Date().toDateString());
+	const [startTime, setStartTime] = useState<string>();
+	const [endTime, setEndTime] = useState<string>();
+	const [date, setDate] = useState<string>("");
 	const [state, formAction, isPending] = useActionState<
 		ActionState<typeof eventSchema>,
 		FormData
@@ -31,7 +41,7 @@ export const NewEvent = () => {
 		success: false,
 		errors: null,
 	});
-	const currentTime = new Date().getTime();
+
 	const calenderWidget = useCalendar();
 
 	useEffect(() => {
@@ -40,7 +50,41 @@ export const NewEvent = () => {
 		}
 	}, [state]);
 
-	console.log(state);
+	const timePeriod = useMemo(() => {
+		if (startTime && startTime?.length > 0 && endTime && endTime?.length > 0) {
+			const [startTimeHour, startTimeMinute] = startTime.split(":");
+			const [endTimeHour, endTimeMinute] = endTime.split(":");
+			if (startTimeHour <= endTimeHour) {
+				const hours = parseInt(endTimeHour) - parseInt(startTimeHour);
+				const minutes = Math.abs(
+					parseInt(startTimeMinute) - parseInt(endTimeMinute),
+				);
+				return `${hours > 9 ? hours : "0" + hours.toString()}:${minutes > 9 ? minutes : "0" + minutes.toString()} hrs`;
+			} else {
+				const hours = parseInt(endTimeHour) + 24 - parseInt(startTime);
+				const minutes = Math.abs(
+					parseInt(startTimeMinute) - parseInt(endTimeMinute),
+				);
+				return `${hours > 9 ? hours : "0" + hours.toString()}:${minutes > 9 ? minutes : "0" + minutes.toString()} hrs`;
+			}
+		} else {
+			return "";
+		}
+	}, [startTime, endTime]);
+
+	const currentTime = useMemo(() => {
+		return moment(date);
+	}, [date]);
+
+	const startTimes = useMemo(() => {
+		return getTimeLeft(new Date(startDate).getDate());
+	}, [startDate]);
+	const endTimes = useMemo(() => {
+		return getTimeLeft(new Date(endDate).getDate(), "end");
+	}, [endDate]);
+
+	const startDateMin = new Date(startDate);
+	const endDateMax = new Date(endDate);
 
 	return (
 		<Dialog
@@ -76,38 +120,84 @@ export const NewEvent = () => {
 						)}
 					</div>
 
-					<div className="grid grid-cols-2 gap-8">
+					<div className="grid grid-cols-1 gap-8">
 						<div className="space-y-2">
-							<label className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-								<Calendar className="w-4 h-4" /> Date
-							</label>
-							<input
-								type="date"
-								name="date"
-								className="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 text-sm text-gray-600 focus:ring-2 focus:ring-indigo-100"
-							/>
-							{state.errors && (
-								<div className="text-red-200">{getErrors("date", state)}</div>
-							)}
-						</div>
-						<div className="space-y-2">
-							<label className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-								<Clock className="w-4 h-4" /> Time Range
+							<label className="text-xs font-bold text-gray-400 uppercase tracking-widest flex flex-row items-center gap-2">
+								<Clock className="w-4 h-4" /> Start Time
 							</label>
 							<div className="flex items-center gap-2">
 								<input
-									type="time"
-									name="startTime"
-									min={currentTime}
-									className="w-full bg-gray-50 border-none rounded-2xl px-3 py-4 text-sm text-gray-600 focus:ring-2 focus:ring-indigo-100"
+									value={startDate}
+									onChange={(e) => setStartDate(e.target.value)}
+									type="date"
+									name="startDate"
+									min={`${startDateMin.getFullYear()}-${startDateMin.getMonth() > 9 ? "" : "0"}${startDateMin.getMonth() + 1}-${startDateMin.getDate() > 9 ? "" : "0"}${startDateMin.getDate()}`}
+									className="w-full bg-gray-50 rounded-2xl invalid:text-red-500 px-3 py-4 text-sm text-gray-600 focus:ring-2 focus:ring-indigo-100"
 								/>
 								<span className="text-gray-300">-</span>
-								<input
-									type="time"
-									name="endTime"
-									className="w-full bg-gray-50 border-none rounded-2xl px-3 py-4 text-sm text-gray-600 focus:ring-2 focus:ring-indigo-100"
-								/>
+								<Select>
+									<SelectTrigger>
+										<SelectValue placeholder="Select time" />
+									</SelectTrigger>
+									<SelectContent>
+										{startTimes.map((startTime, idx) => {
+											return (
+												<SelectItem
+													key={`s-${idx}-${startTime}`}
+													value={startTime}
+												>
+													{startTime}
+												</SelectItem>
+											);
+										})}
+									</SelectContent>
+								</Select>
 							</div>
+							{timePeriod.length > 0 && (
+								<span className="text-xs font-bold text-gray-400 ">
+									{timePeriod}
+								</span>
+							)}
+							{state.errors && (
+								<div className="text-red-200">
+									{getErrors("endTime", state) || getErrors("startTime", state)}
+								</div>
+							)}
+						</div>
+						<div className="space-y-2">
+							<label className="text-xs font-bold text-gray-400 uppercase tracking-widest flex flex-row items-center gap-2">
+								<Clock className="w-4 h-4" /> End Time
+							</label>
+							<div className="flex items-center gap-2">
+								<input
+									value={endDate}
+									onChange={(e) => setEndDate(e.target.value)}
+									type="date"
+									name="endDate"
+									max={`${endDateMax.getFullYear()}-${endDateMax.getMonth() > 9 ? "" : "0"}${endDateMax.getMonth() + 1}-${endDateMax.getDate() > 9 ? "" : "0"}${endDateMax.getDate() + 1}`}
+									className="w-full bg-gray-50 rounded-2xl invalid:text-red-500 px-3 py-4 text-sm text-gray-600 focus:ring-2 focus:ring-indigo-100"
+								/>
+								<span className="text-gray-300">-</span>
+								<Select>
+									<SelectTrigger>
+										<SelectValue placeholder="Select time" />
+									</SelectTrigger>
+									<SelectContent>
+										{endTimes.map((endTime, idx) => {
+											return (
+												<SelectItem key={`e-${idx}-${endTime}`} value={endTime}>
+													{endTime}
+												</SelectItem>
+											);
+										})}
+									</SelectContent>
+								</Select>
+							</div>
+							{timePeriod.length > 0 && (
+								<span className="text-xs font-bold text-gray-400 ">
+									{timePeriod}
+								</span>
+							)}
 							{state.errors && (
 								<div className="text-red-200">
 									{getErrors("endTime", state) || getErrors("startTime", state)}
