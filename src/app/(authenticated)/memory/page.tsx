@@ -1,9 +1,10 @@
 import MemoryProvider from "./components/MemoryProvider";
+import Memories from "./components/memories";
 
 const page = async () => {
 	return (
 		<MemoryProvider>
-			<h1>Comming Soon</h1>
+			<Memories />
 		</MemoryProvider>
 	);
 };

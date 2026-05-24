@@ -71,3 +71,9 @@ export interface CalendarEvent {
 	endTime: string;
 	color: string;
 }
+
+export interface Journal {
+	title: string;
+	content: string;
+	tags: string[];
+}

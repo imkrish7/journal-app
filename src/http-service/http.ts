@@ -1,11 +1,22 @@
 "use server";
+import { cookies } from "next/headers";
 import { HttpError } from "./http-error";
 
 export const http = async <T>(
 	url: string,
 	options?: RequestInit,
 ): Promise<T> => {
-	const response = await fetch(url, options);
+	console.log(`Making HTTP request to ${url} with options:`, options);
+	const cookieStore = await cookies()
+	console.log("Current cookies:", cookieStore.toString());
+	const response = await fetch(url, {
+		...options,
+		headers: {
+			...options?.headers,
+			credentials: "include",
+			Cookie: cookieStore.toString(),
+		}
+	});
 	if (!response.ok) {
 		throw new HttpError(`${response.statusText}`, response.status);
 	}

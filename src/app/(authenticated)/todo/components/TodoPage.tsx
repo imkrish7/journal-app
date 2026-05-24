@@ -10,7 +10,7 @@ interface IProps {
 const TodoPage: FC<IProps> = ({ children }) => {
 	const todoWidget = useTodoWidget();
 	return (
-		<div className="px-6 relative flex flex-col h-full w-full space-y-10 animate-fade-in">
+		<div className="p-6 relative flex flex-col h-full w-full space-y-10 animate-fade-in">
 			<header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
 				<div>
 					<h1 className="text-5xl font-serif font-bold text-slate-900 mb-2">

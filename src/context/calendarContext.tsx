@@ -10,6 +10,7 @@ export interface ICalendar {
 	todayDate: Date;
 	addNewEvent: () => void;
 	newEventForm: boolean;
+	isCalendarSynced: boolean;
 }
 
 export const CalendarContext = createContext<ICalendar | null>(null);

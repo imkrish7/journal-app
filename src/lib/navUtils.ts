@@ -20,8 +20,8 @@ export const data = {
 			url: "/todo",
 			icon: { component: CheckSquare, tag: null },
 			isActive: true,
-			background: "bg-slate-100 ",
-			textColor: "text-slate-600",
+			background: "bg-indigo-100 ",
+			textColor: "text-indigo-600",
 		},
 		{
 			title: "Memory",
