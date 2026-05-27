@@ -1,5 +1,5 @@
 export interface ITodo {
-	name: string;
+	task: string;
 	description: string;
 	deadline: string;
 	priority: string;

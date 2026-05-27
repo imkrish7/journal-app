@@ -1,9 +1,12 @@
 "use client";
+import { memo } from "react";
 import { useCalendar } from "@/context/calendarContext";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 
 const CalenderDates = () => {
 	const calendar = useCalendar();
+	const isMobile = useIsMobile();
 	const today = (date: Date) => {
 		return (
 			calendar?.todayDate.getDate() === date.getDate() &&
@@ -11,7 +14,7 @@ const CalenderDates = () => {
 		);
 	};
 	return (
-		<div className="col-span-12 xl:col-span-7 px-2.5 py-5 sm:p-8 bg-gradient-to-b from-white/25 to-white xl:bg-white rounded-2xl max-xl:row-start-1">
+		<div className="col-span-12 xl:col-span-7 px-2.5 py-5 sm:p-8 bg-gradient-to-b from-white/25 to-white xl:bg-white rounded-2xl max-xl:row-start-1 relative">
 			<div className="w-full md:w-[450px] shrink-0">
 				<div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-5">
 					<div className="flex w-full items-center justify-between mb-8 px-2">
@@ -70,8 +73,15 @@ const CalenderDates = () => {
 					</div>
 				</div>
 			</div>
+			<button
+				onClick={calendar?.addNewEvent}
+				className="fixed bottom-3 cursor-pointer right-10 border-red-200 glass rounded-full p-8 mt-2 md:p-8 border-2 inset-shadow-sm shadow-gray-900/50 shadow-2xl bg-indigo-500 border-gray-100 sn:rounded-[40px] text-gray-300 hover:text-indigo-400 hover:bg-indigo-50/30 transition-all flex items-center justify-center gap-3 font-bold"
+			>
+				<Plus className="w-6 h-6" />
+				{!isMobile && "Add Event to Schedule"}
+			</button>
 		</div>
 	);
 };
 
-export default CalenderDates;
+export default memo(CalenderDates);

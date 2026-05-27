@@ -20,17 +20,23 @@ const nextConfig: NextConfig = {
 				protocol: "https",
 				hostname: "images.unsplash.com",
 			},
+			{
+				protocol: "https",
+				hostname: "lh3.googleusercontent.com",
+				port: "",
+				pathname: "/aida-public/**",
+			},
 		],
 	},
-	// rewrites: async () => {
-	// 	return [
-	// 		{
-	// 			source: "/api/chat",
-	// 			destination:
-	// 				process.env.NEXT_PUBLIC_API_ENDPOINT + "/agent/interaction",
-	// 		},
-	// 	];
-	// },
+	rewrites: async () => {
+		return [
+			{
+				source: "/api/chat",
+				destination:
+					process.env.NEXT_PUBLIC_API_ENDPOINT + "/agent/interaction",
+			},
+		];
+	},
 };
 
 export default nextConfig;

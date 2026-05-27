@@ -1,5 +1,7 @@
 "use client";
+import Loading from "@/app/(authenticated)/loading";
 import { CalendarContext } from "@/context/calendarContext";
+import { getCalendarSyncStatus } from "@/lib/calendarService";
 import {
 	startOfMonth,
 	endOfMonth,
@@ -11,9 +13,10 @@ import {
 import React, {
 	FC,
 	ReactNode,
-	startTransition,
+	useTransition,
 	useMemo,
 	useState,
+	useEffect
 } from "react";
 
 interface IProps {
@@ -36,6 +39,9 @@ const months = [
 ];
 
 const CalendarProvider: FC<IProps> = ({ children }) => {
+	const [isCalendarSynced, setIsCalendarSynced] = useState<boolean>(false);
+	const [isPending, startTransition] = useTransition()
+	const [addNewEvent, setAddNewEvent] = useState<boolean>(false);
 	const [currentDate, setCurrentDate] = useState<Date>(new Date());
 	const [todayDate] = useState<Date>(new Date());
 	const nextMonth = () => {
@@ -65,6 +71,27 @@ const CalendarProvider: FC<IProps> = ({ children }) => {
 		return months[currentDate.getMonth()];
 	}, [currentDate]);
 
+	const handleNewEvent = () => {
+		setAddNewEvent((prev) => !prev);
+	};
+
+	useEffect(() => {
+		// Check if calendar is synced with Google Calendar
+		startTransition(async () => {
+			try {
+				const result = await getCalendarSyncStatus();
+				
+				if(result.isSynced) {
+					setIsCalendarSynced(true);
+				} else {
+					setIsCalendarSynced(false);
+				}
+			} catch (error) {
+				console.error("Error checking calendar sync status:", error);
+			}
+		});
+	}, []);
+
 	return (
 		<CalendarContext.Provider
 			value={{
@@ -74,9 +101,12 @@ const CalendarProvider: FC<IProps> = ({ children }) => {
 				getDays,
 				getMonth: getMonthName,
 				todayDate,
+				addNewEvent: handleNewEvent,
+				newEventForm: addNewEvent,
+				isCalendarSynced
 			}}
 		>
-			{children}
+			{isPending ? <Loading /> : children}
 		</CalendarContext.Provider>
 	);
 };

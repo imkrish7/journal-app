@@ -1,12 +1,16 @@
-import EventCalender from "@/components/EventCalendar/EventCalender";
-import React from "react";
+"use client";
+import EventCalender from "./components/CalendarAndEvent";
+import ConnectGoogleCalender from "@/components/connect-google-calender";
+import { useCalendar } from "@/context/calendarContext";
 
-const page = () => {
+const Page = () => {
+	const 	calender = useCalendar()
+	console.log("Calendar sync status in page component:", calender?.isCalendarSynced);
 	return (
 		<div className="w-full h-full overflow-y-auto">
-			<EventCalender />
+			{calender?.isCalendarSynced ? <EventCalender /> : <ConnectGoogleCalender />}
 		</div>
 	);
 };
 
-export default page;
+export default Page;

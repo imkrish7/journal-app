@@ -1,4 +1,4 @@
-import React from "react";
+import { IMemory } from "../interface/memory";
 import { Card, CardContent } from "./ui/card";
 import Image from "next/image";
 const months = [
@@ -16,9 +16,13 @@ const months = [
 	"Dec",
 ];
 
-const Memory = () => {
+interface IProps {
+	memory: IMemory;
+}
+
+const Memory = ({ memory }: IProps) => {
 	return (
-		<Card className="">
+		<Card className="max-w-4xl">
 			<CardContent>
 				<div className="grid grid-cols-3 gap-2">
 					<div className="w-[180px] h-[200px]">
@@ -36,24 +40,22 @@ const Memory = () => {
 						<div className="flex gap-2">
 							<div className="flex text-gray-100 justify-center items-center flex-col w-[60px] h-[60px] rounded bg-violet-300">
 								<span className="text-lg font-semibold">
-									{months[new Date().getUTCMonth()]}
+									{months[new Date(memory.created_at).getUTCMonth()]}
 								</span>
 								<span className="text-2xl font-semibold">
-									{new Date().getDate()}
+									{new Date(memory.created_at).getDate()}
 								</span>
 							</div>
 							<div>
-								<span className="text-2xl font-semibold">What to do next?</span>
+								<span className="text-2xl font-semibold">{memory.title}</span>
 							</div>
 						</div>
 						<div className="flex-1">
 							<p className="text-sm font-medium text-gray-400">
-								Would you like me to show an example of a sidebar menu with
-								multiple Lottie icons (animated on hover) — something like a
-								modern dashboard sidebar?
+								{memory.memory}
 							</p>
 						</div>
-						<div>Comming soon...</div>
+						{/*<div>Comming soon...</div>*/}
 					</div>
 				</div>
 			</CardContent>

@@ -202,3 +202,14 @@
 .animate-spin-slow {
 	animation: spin-slow 12s linear infinite;
 }
+
+ .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(228, 225, 237, 0.5);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+		
+.primary-shadow {
+	box-shadow: 0 12px 40px rgba(67, 56, 202, 0.08);
+}

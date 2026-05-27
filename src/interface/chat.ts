@@ -71,6 +71,16 @@ export interface IChatEvent extends IBaseStreamMessage {
 	};
 }
 
+export interface IMessage {
+	_id: string;
+	content: string;
+	role: "USER" | "AI" | string;
+	createdAt: number;
+	userAvatarLink: string | undefined;
+	type: "ERROR" | "VALID" | string;
+	event: IEvent | null;
+}
+
 export type IStreamMessage =
 	| ITokenMessage
 	| IErrorMessage
