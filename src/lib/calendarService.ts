@@ -33,12 +33,12 @@ export const getCalendarSyncStatus = async (): Promise<{ isSynced: boolean }> =>
             
         });
         if (!response.ok) {
-            throw new Error("Failed to save calendar credentials");
+            throw new Error("Failed to get calendar sync status");
         }
         const result = await response.json();
         return { isSynced: result.data.is_synced };
     } catch (error) {
-        console.error("Error saving calendar credentials:", error);
+        console.error("Error getting calendar sync status:", error);
         throw error;
     }
 };
@@ -54,7 +54,8 @@ export const getCalendarEvents = async (): Promise<{ google_events: Event[], loc
             
         });
         if (!response.ok) {
-            throw new Error("Failed to save calendar credentials");
+            console.error("Failed to fetch calendar events:", response);
+            throw new Error("Failed to get calendar events");
         }
         const result = await response.json();
         return { google_events: result.data.google_events, local_events: result.data.local_events };

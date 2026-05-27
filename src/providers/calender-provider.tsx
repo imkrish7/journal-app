@@ -16,7 +16,8 @@ import React, {
 	useTransition,
 	useMemo,
 	useState,
-	useEffect
+	useEffect,
+	useRef
 } from "react";
 
 interface IProps {
@@ -39,10 +40,12 @@ const months = [
 ];
 
 const CalendarProvider: FC<IProps> = ({ children }) => {
-	const [isCalendarSynced, setIsCalendarSynced] = useState<boolean>(false);
+	// const [isCalendarSynced, setIsCalendarSynced] = useState<boolean>(false);
+	// const newEventForm = useRef(false);
 	const [isPending, startTransition] = useTransition()
 	const [addNewEvent, setAddNewEvent] = useState<boolean>(false);
 	const [currentDate, setCurrentDate] = useState<Date>(new Date());
+	const isSync = useRef(false);
 	const [todayDate] = useState<Date>(new Date());
 	const nextMonth = () => {
 		startTransition(() => {
@@ -73,18 +76,24 @@ const CalendarProvider: FC<IProps> = ({ children }) => {
 
 	const handleNewEvent = () => {
 		setAddNewEvent((prev) => !prev);
+		console.log("New event from keepsake calendar provider");
 	};
 
 	useEffect(() => {
 		// Check if calendar is synced with Google Calendar
+		if(isSync.current) {
+			return;
+		}
 		startTransition(async () => {
 			try {
 				const result = await getCalendarSyncStatus();
 				
 				if(result.isSynced) {
-					setIsCalendarSynced(true);
+					// setIsCalendarSynced(true);
+					isSync.current = true;
 				} else {
-					setIsCalendarSynced(false);
+					// setIsCalendarSynced(false);
+					isSync.current = false;
 				}
 			} catch (error) {
 				console.error("Error checking calendar sync status:", error);
@@ -103,7 +112,7 @@ const CalendarProvider: FC<IProps> = ({ children }) => {
 				todayDate,
 				addNewEvent: handleNewEvent,
 				newEventForm: addNewEvent,
-				isCalendarSynced
+				isCalendarSynced: isSync.current
 			}}
 		>
 			{isPending ? <Loading /> : children}

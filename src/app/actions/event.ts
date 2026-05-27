@@ -10,16 +10,18 @@ export const createEventAction = async (
 	_prevState: ActionState<typeof eventSchema>,
 	payload: FormData,
 ) => {
-	console.log("Received payload:", Object.fromEntries(payload.entries()));
+	const startTime = payload.get("startTime")?.toString();
+	const endTime = payload.get("endTime")?.toString();
 	const requestPayload = {
 		title: payload.get("title") || "",
 		startDate: payload.get("startDate") || "",
 		endDate: payload.get("endDate") || "",
-		startTime: payload.get("startTime") || "",
-		endTime: payload.get("endTime") || "",
+		startTime: startTime ? startTime?.split("-")[0] : "",
+		endTime: endTime ? endTime?.split("-")[0] : "",
 		description: payload.get("description") || "",
 	};
 
+	console.log("Constructed request payload:", requestPayload);
 	const validatedPayload = eventSchema.safeParse(requestPayload);
 
 	if (validatedPayload.error) {

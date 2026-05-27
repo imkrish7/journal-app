@@ -1,5 +1,5 @@
 "use client";
-import { useActionState, useEffect, useMemo, useState } from "react";
+import { useActionState, useEffect, useMemo, useState, useRef, startTransition } from "react";
 import {  Clock, CheckCircle2, Plus } from "lucide-react";
 
 import {
@@ -18,8 +18,10 @@ import { getErrors } from "@/lib/formErrorUtiles";
 import { getTimeLeft } from "@/lib/newEventUtils";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
 import { SelectValue } from "@radix-ui/react-select";
+import { v4 as uuid } from "uuid";
 
 export const NewEvent = () => {
+	const formSubmitted = useRef(false);
 	const [startDate, setStartDate] = useState<string>(new Date().toDateString());
 	const [endDate, setEndDate] = useState<string>(new Date().toDateString());
 	const [startTime, setStartTime] = useState<string>();
@@ -43,12 +45,24 @@ export const NewEvent = () => {
 	const calenderWidget = useCalendar();
 
 	useEffect(() => {
+
+		if (formSubmitted.current)  return;
+		
 		if (state.errors) {
 			toast.error("Failed to create an event!");
 		}
+		
 		if (state.success) {
-			toast.success("Event created successfully!");
-			calenderWidget?.addNewEvent();
+			startTransition(() => {
+				formSubmitted.current = true;
+				setStartDate(new Date().toDateString());
+				setEndDate(new Date().toDateString());
+				setStartTime("");
+				setEndTime("");
+				toast.success("Event created successfully!");
+				calenderWidget?.addNewEvent();
+			});
+			
 		}
 	}, [state,calenderWidget]);
 
@@ -84,9 +98,21 @@ export const NewEvent = () => {
 	const startDateMin = new Date(startDate);
 	const endDateMax = new Date(endDate);
 
+	console.log("New Event Form:", calenderWidget?.newEventForm);
+
+	const isCalendarOpen = useMemo(() => {
+		
+		return calenderWidget?.newEventForm;
+	}, [calenderWidget?.newEventForm]);
+
+	const handleSubmitAction = (formData: FormData) => {
+		formSubmitted.current = false;
+		formAction(formData);
+	}
+
 	return (
 		<Dialog
-			open={calenderWidget?.newEventForm}
+			open={isCalendarOpen}
 			onOpenChange={calenderWidget?.addNewEvent}
 		>
 			<DialogContent>
@@ -100,7 +126,7 @@ export const NewEvent = () => {
 						</div>
 					</DialogTitle>
 				</DialogHeader>
-				<form action={formAction} className=" space-y-4">
+				<form action={handleSubmitAction} className=" space-y-4">
 					<div className="space-y-2">
 						<div className="flex items-center justify-between">
 							<label className="text-xs font-bold text-gray-400 uppercase tracking-widest">
@@ -141,8 +167,8 @@ export const NewEvent = () => {
 										{startTimes.map((startTime, idx) => {
 											return (
 												<SelectItem
-													key={`s-${idx}-${startTime}`}
-													value={startTime}
+													key={`start-idx-${idx}-${uuid()}`}
+													value={`${startTime}-${idx}`}
 												>
 													{startTime}
 												</SelectItem>
@@ -183,7 +209,7 @@ export const NewEvent = () => {
 									<SelectContent>
 										{endTimes.map((endTime, idx) => {
 											return (
-												<SelectItem key={`e-${idx}-${endTime}`} value={endTime}>
+												<SelectItem key={`end-idx-${idx}-${uuid()}`} value={`${endTime}-${idx}`}>
 													{endTime}
 												</SelectItem>
 											);
@@ -229,8 +255,10 @@ export const NewEvent = () => {
 								type="submit"
 								className="px-10 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-sm font-bold shadow-xl shadow-indigo-200 transition-all flex items-center gap-2 active:scale-95"
 							>
+								{isPending ? "Scheduling..." :<>
 								<CheckCircle2 className="w-5 h-5" />
 								Schedule Event
+								</>}
 							</button>
 						</div>
 					</DialogFooter>
