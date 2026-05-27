@@ -1,6 +1,6 @@
 "use client";
 import { useActionState, useEffect, useMemo, useState } from "react";
-import { Calendar, Clock, CheckCircle2, Plus } from "lucide-react";
+import {  Clock, CheckCircle2, Plus } from "lucide-react";
 
 import {
 	DialogHeader,
@@ -15,18 +15,15 @@ import { ActionState } from "@/interface/actions";
 import { eventSchema } from "@/schema/event";
 import { toast } from "sonner";
 import { getErrors } from "@/lib/formErrorUtiles";
-import moment from "moment";
 import { getTimeLeft } from "@/lib/newEventUtils";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
 import { SelectValue } from "@radix-ui/react-select";
 
 export const NewEvent = () => {
-	const today = moment().format("YYYY-MM-DD");
 	const [startDate, setStartDate] = useState<string>(new Date().toDateString());
 	const [endDate, setEndDate] = useState<string>(new Date().toDateString());
 	const [startTime, setStartTime] = useState<string>();
 	const [endTime, setEndTime] = useState<string>();
-	const [date, setDate] = useState<string>("");
 	const [state, formAction, isPending] = useActionState<
 		ActionState<typeof eventSchema>,
 		FormData
@@ -36,7 +33,8 @@ export const NewEvent = () => {
 			description: "",
 			startTime: "",
 			endTime: "",
-			date: new Date(),
+			startDate: "",
+			endDate: "",
 		},
 		success: false,
 		errors: null,
@@ -48,7 +46,11 @@ export const NewEvent = () => {
 		if (state.errors) {
 			toast.error("Failed to create an event!");
 		}
-	}, [state]);
+		if (state.success) {
+			toast.success("Event created successfully!");
+			calenderWidget?.addNewEvent();
+		}
+	}, [state,calenderWidget]);
 
 	const timePeriod = useMemo(() => {
 		if (startTime && startTime?.length > 0 && endTime && endTime?.length > 0) {
@@ -71,10 +73,6 @@ export const NewEvent = () => {
 			return "";
 		}
 	}, [startTime, endTime]);
-
-	const currentTime = useMemo(() => {
-		return moment(date);
-	}, [date]);
 
 	const startTimes = useMemo(() => {
 		return getTimeLeft(new Date(startDate).getDate());
@@ -102,7 +100,7 @@ export const NewEvent = () => {
 						</div>
 					</DialogTitle>
 				</DialogHeader>
-				<form action={formAction} className="p-10 space-y-8">
+				<form action={formAction} className=" space-y-4">
 					<div className="space-y-2">
 						<div className="flex items-center justify-between">
 							<label className="text-xs font-bold text-gray-400 uppercase tracking-widest">
@@ -135,7 +133,7 @@ export const NewEvent = () => {
 									className="w-full bg-gray-50 rounded-2xl invalid:text-red-500 px-3 py-4 text-sm text-gray-600 focus:ring-2 focus:ring-indigo-100"
 								/>
 								<span className="text-gray-300">-</span>
-								<Select>
+								<Select name="startTime" onValueChange={(value) => setStartTime(value)} value={startTime}>
 									<SelectTrigger>
 										<SelectValue placeholder="Select time" />
 									</SelectTrigger>
@@ -178,7 +176,7 @@ export const NewEvent = () => {
 									className="w-full bg-gray-50 rounded-2xl invalid:text-red-500 px-3 py-4 text-sm text-gray-600 focus:ring-2 focus:ring-indigo-100"
 								/>
 								<span className="text-gray-300">-</span>
-								<Select>
+								<Select name="endTime" onValueChange={(value) => setEndTime(value)} value={endTime}>
 									<SelectTrigger>
 										<SelectValue placeholder="Select time" />
 									</SelectTrigger>

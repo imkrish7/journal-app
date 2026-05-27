@@ -10,15 +10,15 @@ export const createEventAction = async (
 	_prevState: ActionState<typeof eventSchema>,
 	payload: FormData,
 ) => {
+	console.log("Received payload:", Object.fromEntries(payload.entries()));
 	const requestPayload = {
 		title: payload.get("title") || "",
-		date: payload.get("date") || "",
+		startDate: payload.get("startDate") || "",
+		endDate: payload.get("endDate") || "",
 		startTime: payload.get("startTime") || "",
 		endTime: payload.get("endTime") || "",
 		description: payload.get("description") || "",
 	};
-
-	console.log(requestPayload);
 
 	const validatedPayload = eventSchema.safeParse(requestPayload);
 
@@ -29,17 +29,17 @@ export const createEventAction = async (
 				description: "",
 				startTime: "",
 				endTime: "",
-				date: new Date(),
+				startDate: "",
+				endDate: "",
 			},
 			success: false,
 			errors: validatedPayload.error.flatten().fieldErrors,
 		};
 	}
-
+	const cookieStore = await cookies();
 	try {
-		console.log(process.env.API_ENDPOINT);
-		const cookieStore = await cookies();
-		const response = http(`${process.env.API_ENDPOINT}/events/create`, {
+		
+		await http(`${process.env.API_ENDPOINT}/events/create`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -48,22 +48,21 @@ export const createEventAction = async (
 			body: JSON.stringify(requestPayload),
 		});
 
-		console.log(response);
-
 		return {
 			values: {
 				title: "",
 				description: "",
 				startTime: "",
 				endTime: "",
-				date: new Date(),
+				startDate: "",
+				endDate: "",
 			},
 			success: true,
 			errors: null,
 		};
 	} catch (error) {
 		if (error instanceof HttpError) {
-			console.log(error);
+			console.log("HTTP Error:", error);
 			if (error.statusCode === 401) {
 				cookieStore.delete("auth");
 				redirect("/login");
@@ -75,7 +74,8 @@ export const createEventAction = async (
 				description: "",
 				startTime: "",
 				endTime: "",
-				date: new Date(),
+				startDate: "",
+				endDate: "",
 			},
 			success: false,
 			errors: ["Failed to create event!"],

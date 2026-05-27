@@ -1,4 +1,5 @@
 "use client";
+import { memo } from "react";
 import { useCalendar } from "@/context/calendarContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
@@ -83,4 +84,4 @@ const CalenderDates = () => {
 	);
 };
 
-export default CalenderDates;
+export default memo(CalenderDates);

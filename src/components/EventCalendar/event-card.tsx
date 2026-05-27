@@ -1,9 +1,11 @@
 import { MoreHorizontal } from "lucide-react";
-import { FC } from "react";
+import { FC, memo } from "react";
 import { Event } from "@/interface/events";
+import { eventSchema } from "@/schema/event";
+import { z } from "zod";
 
 interface IProps {
-	event: Event;
+	event: Event | z.infer<typeof eventSchema>	;
 }
 
 const EventCard: FC<IProps> = ({ event }) => {
@@ -14,7 +16,7 @@ const EventCard: FC<IProps> = ({ event }) => {
 		>
 			<div className="space-y-3">
 				<div className="flex items-center space-x-3">
-					<div className={`w-3 h-3 rounded-full ${event.color}`}></div>
+					{/* <div className={`w-3 h-3 rounded-full ${event.color}`}></div> */}
 					<span className="text-sm font-medium text-slate-500 tracking-tight">
 						{event.startTime} - {event.endTime	}
 					</span>
@@ -29,4 +31,4 @@ const EventCard: FC<IProps> = ({ event }) => {
 	);
 };
 
-export default EventCard;
+export default memo(EventCard);

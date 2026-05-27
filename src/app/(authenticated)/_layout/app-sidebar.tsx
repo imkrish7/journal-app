@@ -12,7 +12,7 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
-	useSidebar,
+	
 } from "@/components/ui/sidebar";
 
 import Link from "next/link";
@@ -22,8 +22,6 @@ import { data } from "@/lib/navUtils";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const router = useRouter();
 	const pathname = usePathname();
-	const { state } = useSidebar();
-	// const isMobile = useIsMobile();
 
 	const isActive = React.useCallback(
 		(path: string) => {
@@ -32,7 +30,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		[pathname],
 	);
 
-	console.log(state);
 
 	return (
 		<Sidebar

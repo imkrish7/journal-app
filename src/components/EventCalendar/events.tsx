@@ -4,10 +4,13 @@ import { toast } from "sonner";
 import { getCalendarEvents } from "@/lib/calendarService";
 import { Event } from "@/interface/events";
 import Loading from "@/app/(authenticated)/loading";
+import { eventSchema } from "@/schema/event";
+import { z } from "zod";
 
 const Events = () => {
     const [isPending, startTransition] = useTransition()
 	const [events, setEvents] = useState<Event[]>([]);
+	const [localEvents, setLocalEvents] = useState<z.infer<typeof eventSchema>[]>([]);
 	// const events = [
 	// 	{
 	// 		id: 1,
@@ -39,8 +42,6 @@ const Events = () => {
 	// 	},
 	// ];
 
-
-
 	useEffect(() => {
 		// Fetch calendar events from backend
 		startTransition(async () => {
@@ -48,7 +49,8 @@ const Events = () => {
 				const response = await getCalendarEvents();
 				console.log("Fetched calendar events:", response);
 				// setEvents(response.events);
-				setEvents(response.events);
+				setEvents(response.google_events);
+				setLocalEvents(response.local_events);
 			} catch (error) {
 				console.error("Error fetching calendar events:", error);
 				toast.error("Failed to fetch calendar events. Please try again.");
@@ -66,11 +68,23 @@ const Events = () => {
 			</div>
 
 			<div className="space-y-4 flex-1 overflow-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-				{isPending ? <Loading /> : events.length ? events.map((event) => (
-					<EventCard key={event.id} event={event} />
-				)) : (
+				{isPending ? <Loading /> : <>{
+				events.length || localEvents.length ? <>
+					{events.map((event) => (
+						<EventCard key={event.id} event={event} />
+					)) }
+					{
+						localEvents.length ? 
+					localEvents.map((event) => (
+						<EventCard key={event.id} event={event} />
+					)) : null
+					}
+				</>
+					: (
 					<p className="text-slate-400">No upcoming events.</p>
 				)}
+				</>}
+				
 			</div>
 		</div>
 	);

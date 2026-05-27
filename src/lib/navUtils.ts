@@ -1,4 +1,4 @@
-import { Brain, CheckSquare, LayoutDashboard, Trash2 } from "lucide-react";
+import { Brain, CalendarCog, CheckSquare, LayoutDashboard, Trash2 } from "lucide-react";
 export const data = {
 	user: {
 		name: "shadcn",
@@ -35,8 +35,8 @@ export const data = {
 			title: "Events",
 			url: "/reminders",
 			icon: {
-				component: null,
-				tag: "fa-solid fa-calendar-day",
+				component: CalendarCog,
+				tag: null,
 			},
 			isActive: false,
 			background: "bg-amber-50",
