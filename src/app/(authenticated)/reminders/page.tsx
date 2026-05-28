@@ -5,7 +5,6 @@ import { useCalendar } from "@/context/calendarContext";
 
 const Page = () => {
 	const 	calender = useCalendar()
-	console.log("Calendar sync status in page component:", calender?.isCalendarSynced);
 	return (
 		<div className="w-full h-full overflow-y-auto">
 			{calender?.isCalendarSynced ? <EventCalender /> : <ConnectGoogleCalender />}

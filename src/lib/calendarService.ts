@@ -64,3 +64,45 @@ export const getCalendarEvents = async (): Promise<{ google_events: Event[], loc
         throw error;
     }
 };
+
+export const deleteCalendarEventById = async (eventId: string) => {
+    try {
+        const response = await fetch(`http://localhost:8000/events/delete/${eventId}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            
+        });
+        if (!response.ok) {
+            throw new Error("Failed to delete calendar event");
+        }
+        return;
+    } catch (error) {
+        console.error("Error deleting calendar event:", error);
+        throw error;
+    }
+}
+
+export const getLocalEventById = async (eventId: string): Promise<z.infer<typeof eventSchema>> => {
+    try {
+        const response = await fetch(`http://localhost:8000/events/${eventId}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            
+        });
+        if (!response.ok) {
+            throw new Error("Failed to get calendar event");
+        }
+        const result = await response.json();
+        return result.data;
+    } catch (error) {
+        console.error("Error getting calendar event:", error);
+        throw error;
+    }   
+
+}

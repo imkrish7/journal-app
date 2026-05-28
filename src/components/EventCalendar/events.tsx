@@ -11,44 +11,12 @@ const Events = () => {
     const [isPending, startTransition] = useTransition()
 	const [events, setEvents] = useState<Event[]>([]);
 	const [localEvents, setLocalEvents] = useState<z.infer<typeof eventSchema>[]>([]);
-	// const events = [
-	// 	{
-	// 		id: 1,
-	// 		time: "Jan 10,2020 - 10:00 - 11:00",
-	// 		title: "Meeting with a friends",
-	// 		desc: "Meet-Up for Travel Destination Discussion",
-	// 		color: "bg-purple-500",
-	// 	},
-	// 	{
-	// 		id: 2,
-	// 		time: "Jan 12,2020 - 14:00 - 15:30",
-	// 		title: "Project Sync",
-	// 		desc: "Reviewing current progress and blockers",
-	// 		color: "bg-blue-500",
-	// 	},
-	// 	{
-	// 		id: 3,
-	// 		time: "Jan 12,2020 - 14:00 - 15:30",
-	// 		title: "Project Sync",
-	// 		desc: "Reviewing current progress and blockers",
-	// 		color: "bg-blue-500",
-	// 	},
-	// 	{
-	// 		id: 4,
-	// 		time: "Jan 12,2020 - 14:00 - 15:30",
-	// 		title: "Project Sync",
-	// 		desc: "Reviewing current progress and blockers",
-	// 		color: "bg-blue-500",
-	// 	},
-	// ];
 
 	useEffect(() => {
 		// Fetch calendar events from backend
 		startTransition(async () => {
 			try {
 				const response = await getCalendarEvents();
-				console.log("Fetched calendar events:", response);
-				// setEvents(response.events);
 				setEvents(response.google_events);
 				setLocalEvents(response.local_events);
 			} catch (error) {
@@ -57,6 +25,14 @@ const Events = () => {
 			}
 		})
 	},[]);
+
+	const handleEventDelete = (eventId: string, eventSource: "google" | "local") => {
+		if(eventSource === "local"){
+			setLocalEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
+		}else if(eventSource === "google"){
+			setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
+		}		
+	}
 
 	return (
 		<div className="flex-grow space-y-8 h-full flex flex-col">
@@ -71,12 +47,12 @@ const Events = () => {
 				{isPending ? <Loading /> : <>{
 				events.length || localEvents.length ? <>
 					{events.map((event) => (
-						<EventCard key={event.id} event={event} />
+						<EventCard handleEventDelete={handleEventDelete} key={event.id} event={event} eventSource="google" />
 					)) }
 					{
 						localEvents.length ? 
 					localEvents.map((event) => (
-						<EventCard key={event.id} event={event} />
+						<EventCard handleEventDelete={handleEventDelete} key={event.id} event={event} eventSource="local" />
 					)) : null
 					}
 				</>
